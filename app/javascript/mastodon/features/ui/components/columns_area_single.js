@@ -94,7 +94,7 @@ export default class ColumnsAreaSingle extends ImmutablePureComponent {
 
               <NavigationPanel />
 
-              <LinkFooter />
+              <LinkFooter intl={intl} />
             </div>
           </div>
 

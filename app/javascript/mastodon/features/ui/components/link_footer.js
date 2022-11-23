@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { domain, version, source_url, profile_directory as profileDirectory } from 'mastodon/initial_state';
 import { logOut } from 'mastodon/utils/log_out';
@@ -24,8 +24,7 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
   },
 });
 
-export default @injectIntl
-@connect(null, mapDispatchToProps)
+export default @connect(null, mapDispatchToProps)
 class LinkFooter extends React.PureComponent {
 
   static contextTypes = {
@@ -36,15 +35,6 @@ class LinkFooter extends React.PureComponent {
     onLogout: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
-
-  handleLogoutClick = e => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    this.props.onLogout();
-
-    return false;
-  }
 
   render () {
     const { signedIn, permissions } = this.context.identity;
@@ -78,8 +68,6 @@ class LinkFooter extends React.PureComponent {
           <strong>Mastodon</strong>:
           {' '}
           <a href='https://joinmastodon.org' target='_blank'><FormattedMessage id='footer.about' defaultMessage='About' /></a>
-          {' · '}
-          <a href='https://joinmastodon.org/apps' target='_blank'><FormattedMessage id='footer.get_app' defaultMessage='Get the app' /></a>
           {' · '}
           <Link to='/keyboard-shortcuts'><FormattedMessage id='footer.keyboard_shortcuts' defaultMessage='Keyboard shortcuts' /></Link>
           {' · '}
