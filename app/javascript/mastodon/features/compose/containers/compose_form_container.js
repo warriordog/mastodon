@@ -29,13 +29,16 @@ const mapStateToProps = state => ({
   isInReply: state.getIn(['compose', 'in_reply_to']) !== null,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
 
   onChange (text) {
     dispatch(changeCompose(text));
   },
 
   onSubmit (router) {
+    if (ownProps.onSubmit) {
+      ownProps.onSubmit();
+    }
     dispatch(submitCompose(router));
   },
 

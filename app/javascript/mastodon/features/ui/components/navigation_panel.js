@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import {defineMessages, injectIntl, intlShape} from 'react-intl';
 import { Link } from 'react-router-dom';
 import Logo from 'mastodon/components/logo';
 import { timelinePreview, showTrends } from 'mastodon/initial_state';
@@ -28,29 +28,20 @@ const messages = defineMessages({
   search: { id: 'navigation_bar.search', defaultMessage: 'Search' },
 });
 
-export default @injectIntl
-class NavigationPanel extends React.Component {
+export default class NavigationPanel extends React.Component {
 
   static contextTypes = {
     router: PropTypes.object.isRequired,
     identity: PropTypes.object.isRequired,
-  };
-
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
   };
 
   render () {
-    const { intl } = this.props;
+    const { intl } = this.context;
     const { signedIn, disabledAccountId } = this.context.identity;
 
     return (
-      <div className='navigation-panel'>
-        <div className='navigation-panel__logo'>
-          <Link to='/' className='column-link column-link--logo'><Logo /></Link>
-          <hr />
-        </div>
-
+      <React.Fragment>
         {signedIn && (
           <React.Fragment>
             <ColumnLink transparent to='/home' icon='home' text={intl.formatMessage(messages.home)} />
@@ -99,8 +90,10 @@ class NavigationPanel extends React.Component {
           <ColumnLink transparent to='/about' icon='ellipsis-h' text={intl.formatMessage(messages.about)} />
         </div>
 
+        <div className='flex-spacer' />
+
         <NavigationPortal />
-      </div>
+      </React.Fragment>
     );
   }
 
