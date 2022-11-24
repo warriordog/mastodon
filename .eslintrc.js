@@ -1,6 +1,8 @@
 module.exports = {
   root: true,
 
+  extends: ['plugin:@typescript-eslint/recommended'],
+
   env: {
     browser: true,
     node: true,
@@ -12,13 +14,14 @@ module.exports = {
     ATTACHMENT_HOST: false,
   },
 
-  parser: '@babel/eslint-parser',
+  parser: '@typescript-eslint/parser',
 
   plugins: [
     'react',
     'jsx-a11y',
     'import',
     'promise',
+    '@typescript-eslint',
   ],
 
   parserOptions: {
@@ -210,5 +213,6 @@ module.exports = {
         allowFinally: true,
       },
     ],
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };

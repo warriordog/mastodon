@@ -9,6 +9,8 @@ const extname = require('path-complete-extname');
 const { env, settings, themes, output } = require('./configuration');
 const rules = require('./rules');
 const localePackPaths = require('./generateLocalePacks');
+const path = require('path');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const extensionGlob = `**/*{${settings.extensions.join(',')}}*`;
 const entryPath = join(settings.source_path, settings.source_entry_path);
@@ -85,6 +87,12 @@ module.exports = {
       entrypoints: true,
       writeToDisk: true,
       publicPath: true,
+    }),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.resolve(__dirname, '../../tsconfig.json'),
+      },
+      async: false,
     }),
   ],
 

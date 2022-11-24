@@ -6,9 +6,13 @@ Mastodon-hk is a customized fork of [Mastodon](https://github.com/mastodon/masto
 with a few minor changes to improve usability.
 
 ## Differences from vanilla Mastodon
+### Features
+* New "wide UI" to make better use of space on larger screens
+### Tweaks
 * Max post length increased to 5000 (from 500)
-* Desktop UI modified to use only two columns and a wider content area
 * Link to app is removed
+### Technical
+* TypeScript support
 
 ## Usage
 Follow standard instructions for vanilla Mastodon.

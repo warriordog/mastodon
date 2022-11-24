@@ -7,16 +7,26 @@ import ServerBanner from '../../../components/server_banner';
 import NavigationContainer from '../../compose/containers/navigation_container';
 import ComposeFormContainer from '../../compose/containers/compose_form_container';
 import LinkFooter from './link_footer';
-import { Link } from 'react-router-dom';
+import {Link, Router} from 'react-router-dom';
 import Logo from '../../../components/logo';
 import Button from '../../../components/button';
-import { defineMessages, intlShape } from 'react-intl';
+import {defineMessages, InjectedIntl, intlShape} from 'react-intl';
 
 const messages = defineMessages({
   post: { id: 'columns_area_single.post', defaultMessage: 'Post' },
 });
 
-export default class ColumnsAreaSingle extends ImmutablePureComponent {
+export interface ColumnsAreaSingleContext {
+  router: Router,
+  identity: any,
+  intl: InjectedIntl,
+}
+
+export interface ColumnsAreaSingleProps {
+  children?: Node
+}
+
+export default class ColumnsAreaSingle extends ImmutablePureComponent<ColumnsAreaSingleProps> {
 
   static contextTypes = {
     router: PropTypes.object.isRequired,
