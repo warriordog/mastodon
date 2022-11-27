@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux-immutable';
+// import { combineReducers } from 'redux-immutable';
 import dropdown_menu from './dropdown_menu';
 import timelines from './timelines';
 import meta from './meta';
@@ -41,7 +41,7 @@ import accounts_map from './accounts_map';
 import history from './history';
 import tags from './tags';
 
-const reducers = {
+export const reducers = {
   announcements,
   dropdown_menu,
   timelines,
@@ -85,4 +85,4 @@ const reducers = {
   tags,
 };
 
-export default combineReducers(reducers);
+// export default combineReducers(reducers);

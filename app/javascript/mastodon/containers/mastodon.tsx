@@ -1,43 +1,40 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Helmet} from 'react-helmet';
-import {addLocaleData, IntlProvider} from 'react-intl';
-import {Provider as ReduxProvider} from 'react-redux';
-import {BrowserRouter, Route} from 'react-router-dom';
-import {ScrollContext} from 'react-router-scroll-4';
-import configureStore from 'mastodon/store/configureStore';
+import { Helmet } from 'react-helmet';
+import { addLocaleData, IntlProvider } from 'react-intl';
+import { Provider as ReduxProvider, ReactReduxContextValue } from 'react-redux';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { ScrollContext } from 'react-router-scroll-4';
 import UI from 'mastodon/features/ui';
-import {fetchCustomEmojis} from 'mastodon/actions/custom_emojis';
-import {hydrateStore} from 'mastodon/actions/store';
-import {connectUserStream} from 'mastodon/actions/streaming';
+import { fetchCustomEmojis } from 'mastodon/actions/custom_emojis';
+import { hydrateStore } from 'mastodon/actions/store';
+import { connectUserStream } from 'mastodon/actions/streaming';
 import ErrorBoundary from 'mastodon/components/error_boundary';
-import initialState, {title as siteTitle} from 'mastodon/initial_state';
-import {getLocale} from 'mastodon/locales';
+import initialState, { title as siteTitle } from 'mastodon/initial_state';
+import { getLocale } from 'mastodon/locales';
+import { RootState, store } from '../store/configureStore';
 
 const { localeData, messages } = getLocale();
 addLocaleData(localeData);
 
 const title = process.env.NODE_ENV === 'production' ? siteTitle : `${siteTitle} (Dev)`;
 
-export const store = configureStore();
+// export const store = configureStore();
 const hydrateAction = hydrateStore(initialState);
 
 store.dispatch(hydrateAction);
 store.dispatch(fetchCustomEmojis());
 
-export interface MastodonContext {
-  readonly identity: MastodonIdentityContext;
+/**
+ * Global context, available anywhere in mastodon SPA
+ */
+export type RootContext = MastodonContext & ReactReduxContextValue<RootState>;
+
+interface MastodonContext {
+  readonly identity: ReturnType<typeof createIdentityContext>;
 }
 
-interface MastodonIdentityContext {
-  readonly signedIn: boolean,
-  readonly accountId: any,
-  readonly disabledAccountId: any,
-  readonly accessToken: any,
-  readonly permissions: number,
-}
-
-const createIdentityContext = (state): MastodonIdentityContext => ({
+const createIdentityContext = (state) => ({
   signedIn: !!state.meta.me,
   accountId: state.meta.me,
   disabledAccountId: state.meta.disabled_account_id,
@@ -67,7 +64,7 @@ export default class Mastodon extends React.PureComponent<MastodonProps> {
   identity = createIdentityContext(initialState);
   disconnect?: () => void = null;
 
-  getChildContext() {
+  getChildContext(): MastodonContext {
     return {
       identity: this.identity,
     };

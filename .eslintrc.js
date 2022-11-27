@@ -48,6 +48,12 @@ module.exports = {
       node: {
         paths: ['app/javascript'],
       },
+      'typescript': {
+        'alwaysTryTypes': true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+      },
+    },
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
   },
 
@@ -63,7 +69,7 @@ module.exports = {
     ],
     'comma-style': ['warn', 'last'],
     'consistent-return': 'error',
-    'dot-notation': 'error',
+    'dot-notation': 'off',
     eqeqeq: 'error',
     indent: ['warn', 2],
     'jsx-quotes': ['error', 'prefer-single'],
@@ -90,8 +96,10 @@ module.exports = {
     'no-trailing-spaces': 'warn',
     'no-undef': 'error',
     'no-unreachable': 'error',
-    'no-unused-expressions': 'error',
-    'no-unused-vars': [
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'error',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
       'error',
       {
         vars: 'all',
@@ -188,9 +196,12 @@ module.exports = {
 
     'import/extensions': [
       'error',
-      'always',
+      'ignorePackages',
       {
         js: 'never',
+        'jsx': 'never',
+        'ts': 'never',
+        'tsx': 'never',
       },
     ],
     'import/newline-after-import': 'error',

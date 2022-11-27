@@ -1,5 +1,3 @@
-// @ts-check
-
 import { connectStream } from '../stream';
 import {
   updateTimeline,
@@ -22,35 +20,26 @@ import {
   deleteAnnouncement,
 } from './announcements';
 import { getLocale } from '../locales';
+import {AppDispatch, RootState} from "../store/configureStore";
+import {AnyAction} from "@reduxjs/toolkit";
 
 const { messages } = getLocale();
 
-/**
- * @param {number} max
- * @return {number}
- */
-const randomUpTo = max =>
+const randomUpTo = (max: number): number =>
   Math.floor(Math.random() * Math.floor(max));
 
-/**
- * @param {string} timelineId
- * @param {string} channelName
- * @param {Object.<string, string>} params
- * @param {Object} options
- * @param {function(Function, Function): void} [options.fallback]
- * @param {function(): void} [options.fillGaps]
- * @param {function(object): boolean} [options.accept]
- * @return {function(): void}
- */
-export const connectTimelineStream = (timelineId, channelName, params = {}, options = {}) =>
+interface SomeOptions {
+  fallback?: (dispatch: AppDispatch, getState: () => RootState) => void;
+  fillGaps?: () => unknown;
+  accept?: (obj: object) => boolean;
+}
+
+export const connectTimelineStream = (timelineId: string, channelName: string, params: Record<string, string> = {}, options: SomeOptions = {}) =>
   connectStream(channelName, params, (dispatch, getState) => {
-    const locale = getState().getIn(['meta', 'locale']);
+    const locale = getState().meta.locale;
 
     let pollingId;
 
-    /**
-     * @param {function(Function, Function): void} fallback
-     */
     const useFallback = fallback => {
       fallback(dispatch, () => {
         pollingId = setTimeout(() => useFallback(fallback), 20000 + randomUpTo(20000));
@@ -110,58 +99,26 @@ export const connectTimelineStream = (timelineId, channelName, params = {}, opti
     };
   });
 
-/**
- * @param {Function} dispatch
- * @param {function(): void} done
- */
-const refreshHomeTimelineAndNotification = (dispatch, done) => {
+const refreshHomeTimelineAndNotification = (dispatch: AppDispatch, done: () => void) => {
   dispatch(expandHomeTimeline({}, () =>
     dispatch(expandNotifications({}, () =>
       dispatch(fetchAnnouncements(done))))));
 };
 
-/**
- * @return {function(): void}
- */
 export const connectUserStream = () =>
   connectTimelineStream('home', 'user', {}, { fallback: refreshHomeTimelineAndNotification, fillGaps: fillHomeTimelineGaps });
 
-/**
- * @param {Object} options
- * @param {boolean} [options.onlyMedia]
- * @return {function(): void}
- */
-export const connectCommunityStream = ({ onlyMedia } = {}) =>
+export const connectCommunityStream = ({ onlyMedia }: {onlyMedia?: boolean} = {}) =>
   connectTimelineStream(`community${onlyMedia ? ':media' : ''}`, `public:local${onlyMedia ? ':media' : ''}`, {}, { fillGaps: () => (fillCommunityTimelineGaps({ onlyMedia })) });
 
-/**
- * @param {Object} options
- * @param {boolean} [options.onlyMedia]
- * @param {boolean} [options.onlyRemote]
- * @return {function(): void}
- */
-export const connectPublicStream = ({ onlyMedia, onlyRemote } = {}) =>
+export const connectPublicStream = ({ onlyMedia, onlyRemote }: {onlyMedia?: boolean, onlyRemote?: boolean} = {}) =>
   connectTimelineStream(`public${onlyRemote ? ':remote' : ''}${onlyMedia ? ':media' : ''}`, `public${onlyRemote ? ':remote' : ''}${onlyMedia ? ':media' : ''}`, {}, { fillGaps: () => fillPublicTimelineGaps({ onlyMedia, onlyRemote }) });
 
-/**
- * @param {string} columnId
- * @param {string} tagName
- * @param {boolean} onlyLocal
- * @param {function(object): boolean} accept
- * @return {function(): void}
- */
-export const connectHashtagStream = (columnId, tagName, onlyLocal, accept) =>
+export const connectHashtagStream = (columnId: string, tagName: string, onlyLocal: boolean, accept: (obj: object) => boolean) =>
   connectTimelineStream(`hashtag:${columnId}${onlyLocal ? ':local' : ''}`, `hashtag${onlyLocal ? ':local' : ''}`, { tag: tagName }, { accept });
 
-/**
- * @return {function(): void}
- */
 export const connectDirectStream = () =>
   connectTimelineStream('direct', 'direct');
 
-/**
- * @param {string} listId
- * @return {function(): void}
- */
-export const connectListStream = listId =>
+export const connectListStream = (listId: string) =>
   connectTimelineStream(`list:${listId}`, 'list', { list: listId }, { fillGaps: () => fillListTimelineGaps(listId) });
