@@ -4,19 +4,25 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "lib": ["es6", "dom"],
-    "module": "es6",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ES2022",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "es5",
+    "target": "ES2022",
     "jsx": "react",
-    "noEmit": true
+    "noEmit": true,
+    "allowJs": true,
+    "baseUrl": "./app/javascript",
+    "resolveJsonModule": true,
+    "strict": false,
+    "incremental": true
   },
   "exclude": [
     "**/*.spec.ts",
-    "node_modules",
-    "vendor",
-    "public"
+    "**/build/*",
+    "**/node_modules/*",
+    "**/public/*",
+    "**/vendor/*"
   ],
   "compileOnSave": false
 }
