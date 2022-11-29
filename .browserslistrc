@@ -2,6 +2,7 @@
 defaults
 not IE 11
 not dead
+not op_mini all
 
 [development]
 supports es6-module
