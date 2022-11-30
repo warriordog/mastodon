@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 
 const messages = defineMessages({
   post: { id: 'columns_area_single.post', defaultMessage: 'Post' },
+  cancel: { id: 'columns_area_single.cancel', defaultMessage: 'Cancel' },
 });
 
 class ColumnsAreaSingle extends ImmutablePureComponent {
@@ -71,12 +72,15 @@ class ColumnsAreaSingle extends ImmutablePureComponent {
 
           <div className='columns-area-search'>
             {signedIn && (
-              <Button
-                type='button'
-                className='toggle-compose-button'
-                text={intl.formatMessage(messages.post)}
-                onClick={toggleCompose}
-              />
+              <div className='toggle-compose-button-container'>
+                <Button
+                  type='button'
+                  className='toggle-compose-button'
+                  text={intl.formatMessage(composeIsVisible ? messages.cancel : messages.post)}
+                  onClick={toggleCompose}
+                  secondary={composeIsVisible}
+                />
+              </div>
             )}
             <SearchContainer openInRoute />
           </div>
