@@ -2,7 +2,7 @@ import api from '../api';
 
 import { deleteFromTimelines } from './timelines';
 import { importFetchedStatus, importFetchedStatuses, importFetchedAccount } from './importer';
-import { ensureComposeIsVisible, setComposeToStatus } from './compose';
+import { setComposeToStatus, showCompose } from './compose';
 
 export const STATUS_FETCH_REQUEST = 'STATUS_FETCH_REQUEST';
 export const STATUS_FETCH_SUCCESS = 'STATUS_FETCH_SUCCESS';
@@ -104,7 +104,7 @@ export const editStatus = (id, routerHistory) => (dispatch, getState) => {
 
   api(getState).get(`/api/v1/statuses/${id}/source`).then(response => {
     dispatch(fetchStatusSourceSuccess());
-    ensureComposeIsVisible(getState, routerHistory);
+    dispatch(showCompose(routerHistory));
     dispatch(setComposeToStatus(status, response.data.text, response.data.spoiler_text));
   }).catch(error => {
     dispatch(fetchStatusSourceFail(error));
@@ -141,7 +141,7 @@ export function deleteStatus(id, routerHistory, withRedraft = false) {
 
       if (withRedraft) {
         dispatch(redraft(status, response.data.text));
-        ensureComposeIsVisible(getState, routerHistory);
+        dispatch(showCompose(routerHistory));
       }
     }).catch(error => {
       dispatch(deleteStatusFail(id, error));

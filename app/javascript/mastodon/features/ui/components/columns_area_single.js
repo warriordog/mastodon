@@ -11,38 +11,50 @@ import { Link } from 'react-router-dom';
 import Logo from '../../../components/logo';
 import Button from '../../../components/button';
 import { defineMessages, intlShape } from 'react-intl';
+import {
+  hideCompose,
+  mountCompose,
+  showCompose,
+  toggleCompose,
+  unmountCompose,
+} from '../../../actions/compose';
+import { connect } from 'react-redux';
 
 const messages = defineMessages({
   post: { id: 'columns_area_single.post', defaultMessage: 'Post' },
 });
 
-export default class ColumnsAreaSingle extends ImmutablePureComponent {
+class ColumnsAreaSingle extends ImmutablePureComponent {
 
   static contextTypes = {
-    router: PropTypes.object.isRequired,
     identity: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
   };
 
   static propTypes = {
+    router: PropTypes.object.isRequired,
     children: PropTypes.node,
+    onMount: PropTypes.func,
+    onUnmount: PropTypes.func,
+    changeComposing: PropTypes.func,
+    showCompose: PropTypes.func,
+    hideCompose: PropTypes.func,
+    toggleCompose: PropTypes.func,
+    composeIsVisible: PropTypes.bool,
   };
 
-  state = {
-    composeIsOpen: false,
+  componentDidMount () {
+    const { onMount } = this.props;
+    onMount?.();
   }
 
-  openCompose = () => {
-    this.setState({ composeIsOpen: true });
-  }
-
-  closeCompose = () => {
-    this.setState({ composeIsOpen: false });
+  componentWillUnmount () {
+    const { onUnmount } = this.props;
+    onUnmount?.();
   }
 
   render () {
-    const { children } = this.props;
-    const { composeIsOpen } = this.state;
+    const { children, composeIsVisible, hideCompose, toggleCompose } = this.props;
     const { identity, intl } = this.context;
     const signedIn = identity.signedIn;
 
@@ -63,19 +75,20 @@ export default class ColumnsAreaSingle extends ImmutablePureComponent {
                 type='button'
                 className='toggle-compose-button'
                 text={intl.formatMessage(messages.post)}
-                onClick={this.openCompose}
+                onClick={toggleCompose}
               />
             )}
             <SearchContainer openInRoute />
           </div>
 
-          {composeIsOpen && (
+          {/*This might need to be a CSS class instead*/}
+          {composeIsVisible && (
             <div className='columns-area-publish'>
               <ComposeFormContainer
                 singleColumn
                 inlineButtons
-                onCancel={this.closeCompose}
-                onSubmit={this.closeCompose}
+                onCancel={hideCompose}
+                onSubmit={hideCompose}
               />
             </div>
           )}
@@ -83,7 +96,7 @@ export default class ColumnsAreaSingle extends ImmutablePureComponent {
           <div className='columns-area-sidebar'>
             <div className='sidebar-content'>
               {signedIn && (
-                <NavigationContainer onClose={this.onBlur} />
+                <NavigationContainer />
               )}
 
               {!signedIn && (
@@ -111,3 +124,22 @@ export default class ColumnsAreaSingle extends ImmutablePureComponent {
   }
 
 }
+
+function mapStateToProps(state) {
+  return {
+    composeIsVisible: state.getIn(['compose', 'visible']),
+  };
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+  const { router } = ownProps;
+  return {
+    onMount: () => dispatch(mountCompose()),
+    onUnmount: () => dispatch(unmountCompose()),
+    showCompose: () => dispatch(showCompose(router.history)),
+    hideCompose: () => dispatch(hideCompose()),
+    toggleCompose: () => dispatch(toggleCompose(router.history)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ColumnsAreaSingle);

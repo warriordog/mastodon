@@ -49,11 +49,13 @@ export const COMPOSE_TAG_HISTORY_UPDATE = 'COMPOSE_TAG_HISTORY_UPDATE';
 export const COMPOSE_MOUNT   = 'COMPOSE_MOUNT';
 export const COMPOSE_UNMOUNT = 'COMPOSE_UNMOUNT';
 
+export const COMPOSE_SHOW   = 'COMPOSE_SHOW';
+export const COMPOSE_HIDE = 'COMPOSE_HIDE';
+
 export const COMPOSE_SENSITIVITY_CHANGE  = 'COMPOSE_SENSITIVITY_CHANGE';
 export const COMPOSE_SPOILERNESS_CHANGE  = 'COMPOSE_SPOILERNESS_CHANGE';
 export const COMPOSE_SPOILER_TEXT_CHANGE = 'COMPOSE_SPOILER_TEXT_CHANGE';
 export const COMPOSE_VISIBILITY_CHANGE   = 'COMPOSE_VISIBILITY_CHANGE';
-export const COMPOSE_COMPOSING_CHANGE    = 'COMPOSE_COMPOSING_CHANGE';
 export const COMPOSE_LANGUAGE_CHANGE     = 'COMPOSE_LANGUAGE_CHANGE';
 
 export const COMPOSE_EMOJI_INSERT = 'COMPOSE_EMOJI_INSERT';
@@ -81,11 +83,40 @@ const messages = defineMessages({
   uploadErrorPoll:  { id: 'upload_error.poll', defaultMessage: 'File upload not allowed with polls.' },
 });
 
-export const ensureComposeIsVisible = (getState, routerHistory) => {
+function ensureComposeIsMounted(getState, routerHistory) {
   if (!getState().getIn(['compose', 'mounted'])) {
     routerHistory.push('/publish');
   }
-};
+}
+
+export function showCompose(routerHistory) {
+  return (dispatch, getState) => {
+    if (!getState().getIn(['compose', 'visible'])) {
+      ensureComposeIsMounted(getState, routerHistory);
+      dispatch({ type: COMPOSE_SHOW });
+    }
+  };
+}
+
+export function hideCompose() {
+  return (dispatch, getState) => {
+    if (getState().getIn(['compose', 'visible'])) {
+      dispatch({ type: COMPOSE_HIDE });
+    }
+  };
+}
+
+export function toggleCompose(routerHistory) {
+  return (dispatch, getState) => {
+    const newVisibility = !getState().getIn(['compose', 'visible']);
+
+    if (newVisibility) {
+      dispatch(showCompose(routerHistory));
+    } else {
+      dispatch(hideCompose());
+    }
+  };
+}
 
 export function setComposeToStatus(status, text, spoiler_text) {
   return{
@@ -104,13 +135,13 @@ export function changeCompose(text) {
 };
 
 export function replyCompose(status, routerHistory) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: COMPOSE_REPLY,
       status: status,
     });
 
-    ensureComposeIsVisible(getState, routerHistory);
+    dispatch(showCompose(routerHistory));
   };
 };
 
@@ -127,24 +158,24 @@ export function resetCompose() {
 };
 
 export function mentionCompose(account, routerHistory) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: COMPOSE_MENTION,
       account: account,
     });
 
-    ensureComposeIsVisible(getState, routerHistory);
+    dispatch(showCompose(routerHistory));
   };
 };
 
 export function directCompose(account, routerHistory) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: COMPOSE_DIRECT,
       account: account,
     });
 
-    ensureComposeIsVisible(getState, routerHistory);
+    dispatch(showCompose(routerHistory));
   };
 };
 
@@ -697,13 +728,6 @@ export function insertEmojiCompose(position, emoji, needsSpace) {
     position,
     emoji,
     needsSpace,
-  };
-};
-
-export function changeComposing(value) {
-  return {
-    type: COMPOSE_COMPOSING_CHANGE,
-    value,
   };
 };
 

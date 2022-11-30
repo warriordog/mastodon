@@ -1,6 +1,8 @@
 import {
   COMPOSE_MOUNT,
   COMPOSE_UNMOUNT,
+  COMPOSE_SHOW,
+  COMPOSE_HIDE,
   COMPOSE_CHANGE,
   COMPOSE_REPLY,
   COMPOSE_REPLY_CANCEL,
@@ -30,7 +32,6 @@ import {
   COMPOSE_SPOILER_TEXT_CHANGE,
   COMPOSE_VISIBILITY_CHANGE,
   COMPOSE_LANGUAGE_CHANGE,
-  COMPOSE_COMPOSING_CHANGE,
   COMPOSE_EMOJI_INSERT,
   COMPOSE_UPLOAD_CHANGE_REQUEST,
   COMPOSE_UPLOAD_CHANGE_SUCCESS,
@@ -57,6 +58,7 @@ import { unescapeHTML } from '../utils/html';
 
 const initialState = ImmutableMap({
   mounted: 0,
+  visible: false,
   sensitive: false,
   spoiler: false,
   spoiler_text: '',
@@ -67,7 +69,6 @@ const initialState = ImmutableMap({
   caretPosition: null,
   preselectDate: null,
   in_reply_to: null,
-  is_composing: false,
   is_submitting: false,
   is_changing_upload: false,
   is_uploading: false,
@@ -284,9 +285,11 @@ export default function compose(state = initialState, action) {
   case COMPOSE_MOUNT:
     return state.set('mounted', state.get('mounted') + 1);
   case COMPOSE_UNMOUNT:
-    return state
-      .set('mounted', Math.max(state.get('mounted') - 1, 0))
-      .set('is_composing', false);
+    return state.set('mounted', Math.max(state.get('mounted') - 1, 0));
+  case COMPOSE_SHOW:
+    return state.set('visible', true);
+  case COMPOSE_HIDE:
+    return state.set('visible', false);
   case COMPOSE_SENSITIVITY_CHANGE:
     return state.withMutations(map => {
       if (!state.get('spoiler')) {
@@ -317,8 +320,6 @@ export default function compose(state = initialState, action) {
     return state
       .set('text', action.text)
       .set('idempotencyKey', uuid());
-  case COMPOSE_COMPOSING_CHANGE:
-    return state.set('is_composing', action.value);
   case COMPOSE_REPLY:
     return state.withMutations(map => {
       map.set('id', null);

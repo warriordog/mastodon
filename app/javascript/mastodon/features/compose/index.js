@@ -4,7 +4,7 @@ import NavigationContainer from './containers/navigation_container';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
-import { changeComposing, mountCompose, unmountCompose } from '../../actions/compose';
+import { hideCompose, mountCompose, showCompose, unmountCompose } from '../../actions/compose';
 import { Link } from 'react-router-dom';
 import { injectIntl, defineMessages } from 'react-intl';
 import SearchContainer from './containers/search_container';
@@ -41,6 +41,10 @@ export default @connect(mapStateToProps)
 @injectIntl
 class Compose extends React.PureComponent {
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  };
+
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     columns: ImmutablePropTypes.list.isRequired,
@@ -76,11 +80,13 @@ class Compose extends React.PureComponent {
   }
 
   onFocus = () => {
-    this.props.dispatch(changeComposing(true));
+    const { router } = this.context;
+    this.props.dispatch(showCompose(router));
   }
 
   onBlur = () => {
-    this.props.dispatch(changeComposing(false));
+    const { router } = this.context;
+    this.props.dispatch(hideCompose(router));
   }
 
   render () {

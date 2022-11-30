@@ -106,10 +106,11 @@ export default class ColumnsArea extends ImmutablePureComponent {
 
   render () {
     const { columns, children, singleColumn, isModalOpen } = this.props;
+    const { router } = this.context;
 
     if (singleColumn) {
       return (
-        <ColumnsAreaSingle children={children} />
+        <ColumnsAreaSingle children={children} router={router} />
       );
     }
 
