@@ -125,14 +125,14 @@ export function setComposeToStatus(status, text, spoiler_text) {
     text,
     spoiler_text,
   };
-};
+}
 
 export function changeCompose(text) {
   return {
     type: COMPOSE_CHANGE,
     text: text,
   };
-};
+}
 
 export function replyCompose(status, routerHistory) {
   return (dispatch) => {
@@ -143,19 +143,19 @@ export function replyCompose(status, routerHistory) {
 
     dispatch(showCompose(routerHistory));
   };
-};
+}
 
 export function cancelReplyCompose() {
   return {
     type: COMPOSE_REPLY_CANCEL,
   };
-};
+}
 
 export function resetCompose() {
   return {
     type: COMPOSE_RESET,
   };
-};
+}
 
 export function mentionCompose(account, routerHistory) {
   return (dispatch) => {
@@ -166,7 +166,7 @@ export function mentionCompose(account, routerHistory) {
 
     dispatch(showCompose(routerHistory));
   };
-};
+}
 
 export function directCompose(account, routerHistory) {
   return (dispatch) => {
@@ -177,7 +177,7 @@ export function directCompose(account, routerHistory) {
 
     dispatch(showCompose(routerHistory));
   };
-};
+}
 
 export function submitCompose(routerHistory) {
   return function (dispatch, getState) {
@@ -242,27 +242,27 @@ export function submitCompose(routerHistory) {
       dispatch(submitComposeFail(error));
     });
   };
-};
+}
 
 export function submitComposeRequest() {
   return {
     type: COMPOSE_SUBMIT_REQUEST,
   };
-};
+}
 
 export function submitComposeSuccess(status) {
   return {
     type: COMPOSE_SUBMIT_SUCCESS,
     status: status,
   };
-};
+}
 
 export function submitComposeFail(error) {
   return {
     type: COMPOSE_SUBMIT_FAIL,
     error: error,
   };
-};
+}
 
 export function uploadCompose(files) {
   return function (dispatch, getState) {
@@ -325,9 +325,9 @@ export function uploadCompose(files) {
           }
         });
       }).catch(error => dispatch(uploadComposeFail(error)));
-    };
+    }
   };
-};
+}
 
 export const uploadComposeProcessing = () => ({
   type: COMPOSE_UPLOAD_PROCESSING,
@@ -385,14 +385,14 @@ export function initMediaEditModal(id) {
 
     dispatch(openModal('FOCAL_POINT', { id }));
   };
-};
+}
 
 export function onChangeMediaDescription(description) {
   return {
     type: COMPOSE_CHANGE_MEDIA_DESCRIPTION,
     description,
   };
-};
+}
 
 export function onChangeMediaFocus(focusX, focusY) {
   return {
@@ -400,7 +400,7 @@ export function onChangeMediaFocus(focusX, focusY) {
     focusX,
     focusY,
   };
-};
+}
 
 export function changeUploadCompose(id, params) {
   return (dispatch, getState) => {
@@ -412,14 +412,14 @@ export function changeUploadCompose(id, params) {
       dispatch(changeUploadComposeFail(id, error));
     });
   };
-};
+}
 
 export function changeUploadComposeRequest() {
   return {
     type: COMPOSE_UPLOAD_CHANGE_REQUEST,
     skipLoading: true,
   };
-};
+}
 
 export function changeUploadComposeSuccess(media) {
   return {
@@ -427,7 +427,7 @@ export function changeUploadComposeSuccess(media) {
     media: media,
     skipLoading: true,
   };
-};
+}
 
 export function changeUploadComposeFail(error) {
   return {
@@ -435,14 +435,14 @@ export function changeUploadComposeFail(error) {
     error: error,
     skipLoading: true,
   };
-};
+}
 
 export function uploadComposeRequest() {
   return {
     type: COMPOSE_UPLOAD_REQUEST,
     skipLoading: true,
   };
-};
+}
 
 export function uploadComposeProgress(loaded, total) {
   return {
@@ -450,7 +450,7 @@ export function uploadComposeProgress(loaded, total) {
     loaded: loaded,
     total: total,
   };
-};
+}
 
 export function uploadComposeSuccess(media, file) {
   return {
@@ -459,7 +459,7 @@ export function uploadComposeSuccess(media, file) {
     file: file,
     skipLoading: true,
   };
-};
+}
 
 export function uploadComposeFail(error) {
   return {
@@ -467,14 +467,14 @@ export function uploadComposeFail(error) {
     error: error,
     skipLoading: true,
   };
-};
+}
 
 export function undoUploadCompose(media_id) {
   return {
     type: COMPOSE_UPLOAD_UNDO,
     media_id: media_id,
   };
-};
+}
 
 export function clearComposeSuggestions() {
   if (fetchComposeSuggestionsAccountsController) {
@@ -483,7 +483,7 @@ export function clearComposeSuggestions() {
   return {
     type: COMPOSE_SUGGESTIONS_CLEAR,
   };
-};
+}
 
 const fetchComposeSuggestionsAccounts = throttle((dispatch, getState, token) => {
   if (fetchComposeSuggestionsAccountsController) {
@@ -561,7 +561,7 @@ export function fetchComposeSuggestions(token) {
       break;
     }
   };
-};
+}
 
 export function readyComposeSuggestionsEmojis(token, emojis) {
   return {
@@ -569,7 +569,7 @@ export function readyComposeSuggestionsEmojis(token, emojis) {
     token,
     emojis,
   };
-};
+}
 
 export function readyComposeSuggestionsAccounts(token, accounts) {
   return {
@@ -577,7 +577,7 @@ export function readyComposeSuggestionsAccounts(token, accounts) {
     token,
     accounts,
   };
-};
+}
 
 export const readyComposeSuggestionsTags = (token, tags) => ({
   type: COMPOSE_SUGGESTIONS_READY,
@@ -622,7 +622,7 @@ export function selectComposeSuggestion(position, token, suggestion, path) {
       });
     }
   };
-};
+}
 
 export function updateSuggestionTags(token) {
   return {
@@ -683,19 +683,19 @@ export function mountCompose() {
   return {
     type: COMPOSE_MOUNT,
   };
-};
+}
 
 export function unmountCompose() {
   return {
     type: COMPOSE_UNMOUNT,
   };
-};
+}
 
 export function changeComposeSensitivity() {
   return {
     type: COMPOSE_SENSITIVITY_CHANGE,
   };
-};
+}
 
 export const changeComposeLanguage = language => ({
   type: COMPOSE_LANGUAGE_CHANGE,
@@ -706,21 +706,21 @@ export function changeComposeSpoilerness() {
   return {
     type: COMPOSE_SPOILERNESS_CHANGE,
   };
-};
+}
 
 export function changeComposeSpoilerText(text) {
   return {
     type: COMPOSE_SPOILER_TEXT_CHANGE,
     text,
   };
-};
+}
 
 export function changeComposeVisibility(value) {
   return {
     type: COMPOSE_VISIBILITY_CHANGE,
     value,
   };
-};
+}
 
 export function insertEmojiCompose(position, emoji, needsSpace) {
   return {
@@ -729,26 +729,26 @@ export function insertEmojiCompose(position, emoji, needsSpace) {
     emoji,
     needsSpace,
   };
-};
+}
 
 export function addPoll() {
   return {
     type: COMPOSE_POLL_ADD,
   };
-};
+}
 
 export function removePoll() {
   return {
     type: COMPOSE_POLL_REMOVE,
   };
-};
+}
 
 export function addPollOption(title) {
   return {
     type: COMPOSE_POLL_OPTION_ADD,
     title,
   };
-};
+}
 
 export function changePollOption(index, title) {
   return {
@@ -756,14 +756,14 @@ export function changePollOption(index, title) {
     index,
     title,
   };
-};
+}
 
 export function removePollOption(index) {
   return {
     type: COMPOSE_POLL_OPTION_REMOVE,
     index,
   };
-};
+}
 
 export function changePollSettings(expiresIn, isMultiple) {
   return {
@@ -771,4 +771,4 @@ export function changePollSettings(expiresIn, isMultiple) {
     expiresIn,
     isMultiple,
   };
-};
+}
