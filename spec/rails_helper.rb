@@ -8,12 +8,12 @@ require 'rspec/rails'
 require 'webmock/rspec'
 require 'paperclip/matchers'
 require 'capybara/rspec'
+require 'sidekiq/testing/inline'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 ActiveRecord::Migration.maintain_test_schema!
 WebMock.disable_net_connect!(allow: Chewy.settings[:host])
-Sidekiq::Testing.inline!
 Sidekiq.logger = nil
 
 Devise::Test::ControllerHelpers.module_eval do
