@@ -12,7 +12,7 @@ const textMatchesTarget = (text, origin, host) => {
   return (text === origin || text === host
           || text.startsWith(origin + '/') || text.startsWith(host + '/')
           || 'www.' + text === host || ('www.' + text).startsWith(host + '/'));
-}
+};
 
 const isLinkMisleading = (link) => {
   let linkTextParts = [];
@@ -169,8 +169,8 @@ class StatusContent extends React.PureComponent {
         link.setAttribute('title', link.href);
         link.classList.add('unhandled-link');
 
-      link.setAttribute('target', '_blank');
-      link.setAttribute('rel', 'noopener nofollow noreferrer');
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener nofollow noreferrer');
 
         try {
           if (tagLinks && isLinkMisleading(link)) {
@@ -327,6 +327,21 @@ class StatusContent extends React.PureComponent {
       'status__content--with-spoiler': status.get('spoiler_text').length > 0,
     });
 
+    let quote = '';
+
+    if (status.get('quote', null) !== null) {
+      let quoteStatus = status.get('quote');
+      let quoteStatusContent = { __html: quoteStatus.get('contentHtml') };
+
+      quote = (
+        <div className='status__quote'>
+          <blockquote>
+            <div dangerouslySetInnerHTML={quoteStatusContent} />
+          </blockquote>
+        </div>
+      );
+    }
+
     const translateButton = renderTranslate && (
       <TranslateButton onClick={this.handleTranslate} translation={status.get('translation')} />
     );
@@ -341,7 +356,7 @@ class StatusContent extends React.PureComponent {
             to={`/@${item.get('acct')}`}
             href={itemUrl}
             key={item.get('id')}
-            className="mention"
+            className='mention'
           >
             @<span>{item.get('username')}</span>
           </Permalink>
@@ -399,6 +414,7 @@ class StatusContent extends React.PureComponent {
           {mentionsPlaceholder}
 
           <div className={`status__content__spoiler ${!hidden ? 'status__content__spoiler--visible' : ''}`}>
+            {quote}
             <div
               ref={this.setContentsRef}
               key={`contents-${tagLinks}`}
@@ -424,6 +440,7 @@ class StatusContent extends React.PureComponent {
           onMouseUp={this.handleMouseUp}
           tabIndex='0'
         >
+          {quote}
           <div
             ref={this.setContentsRef}
             key={`contents-${tagLinks}-${rewriteMentions}`}
@@ -445,6 +462,7 @@ class StatusContent extends React.PureComponent {
           className='status__content'
           tabIndex='0'
         >
+          {quote}
           <div
             ref={this.setContentsRef}
             key={`contents-${tagLinks}`}
