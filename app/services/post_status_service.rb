@@ -21,6 +21,7 @@ class PostStatusService < BaseService
   # @option [Doorkeeper::Application] :application
   # @option [String] :idempotency Optional idempotency key
   # @option [Boolean] :with_rate_limit
+  # @option [String] :quote_id
   # @return [Status]
   def call(account, options = {})
     @account     = account
@@ -181,6 +182,7 @@ class PostStatusService < BaseService
       application: @options[:application],
       content_type: @options[:content_type] || @account.user&.setting_default_content_type,
       rate_limit: @options[:with_rate_limit],
+      quote_id: @options[:quote_id],
     }.compact
   end
 
