@@ -123,6 +123,7 @@
   }
 }
 
+.quote-indicator,
 .reply-indicator {
   margin: 0 0 10px;
   border-radius: 4px;
@@ -133,6 +134,7 @@
   flex: 0 2 auto;
 }
 
+.quote-indicator__header,
 .reply-indicator__header {
   margin-bottom: 5px;
   overflow: hidden;
@@ -140,11 +142,13 @@
   & > .account.small { color: $inverted-text-color; }
 }
 
+.quote-indicator__cancel,
 .reply-indicator__cancel {
   float: right;
   line-height: 24px;
 }
 
+.quote-indicator__content,
 .reply-indicator__content {
   position: relative;
   margin: 10px 0;
