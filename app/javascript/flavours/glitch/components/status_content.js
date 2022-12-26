@@ -332,10 +332,26 @@ class StatusContent extends React.PureComponent {
     if (status.get('quote', null) !== null) {
       let quoteStatus = status.get('quote');
       let quoteStatusContent = { __html: quoteStatus.get('contentHtml') };
+      let quoteStatusAccount = quoteStatus.get('account');
+      let quoteStatusDisplayName = { __html: quoteStatusAccount.get('display_name_html') };
+
+      console.log('QUOTE:', quoteStatus);
+      console.log('ACCOUNT:', quoteStatusAccount);
 
       quote = (
         <div className='status__quote'>
           <blockquote>
+            <bdi>
+              <span class="quote-display-name">
+                <Icon
+                  fixedWidth
+                  id='quote-right'
+                  aria-hidden='true'
+                  key='icon-quote-right' />
+                <strong class="display-name__html"
+                  dangerouslySetInnerHTML={quoteStatusDisplayName} />
+              </span>
+            </bdi>
             <div dangerouslySetInnerHTML={quoteStatusContent} />
           </blockquote>
         </div>
