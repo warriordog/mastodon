@@ -335,6 +335,7 @@ class Status extends ImmutablePureComponent {
   }
 
   handleQuoteClick = (status) => {
+    const { dispatch } = this.props;
     const { signedIn } = this.context.identity;
 
     if (signedIn) {
