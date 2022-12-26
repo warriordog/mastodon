@@ -335,9 +335,6 @@ class StatusContent extends React.PureComponent {
       let quoteStatusAccount = quoteStatus.get('account');
       let quoteStatusDisplayName = { __html: quoteStatusAccount.get('display_name_html') };
 
-      console.log('QUOTE:', quoteStatus);
-      console.log('ACCOUNT:', quoteStatusAccount);
-
       quote = (
         <div className='status__quote'>
           <blockquote>
