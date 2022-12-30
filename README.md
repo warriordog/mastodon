@@ -14,6 +14,9 @@ with a few minor changes to improve usability.
   * Wider search bar
 * Link to app is removed
 
+## Planned changes
+* Filter from home only (allow in lists) 
+
 ## Usage
 Follow standard instructions for vanilla Mastodon.
 No workflow changes are needed!
