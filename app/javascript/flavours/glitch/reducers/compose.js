@@ -362,6 +362,51 @@ const updateSuggestionTags = (state, token) => {
   });
 };
 
+const updateWithReply = (state, action) => {
+  // doesn't support QT&reply
+  const isQuote = action.type === COMPOSE_QUOTE;
+  const parentStatusId = action.status.get('id');
+
+  return state.withMutations(map => {
+    map.set('id', null);
+    map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
+    map.update(
+      'advanced_options',
+      map => map.merge(new ImmutableMap({ do_not_federate: !!action.status.get('local_only') })),
+    );
+    map.set('focusDate', new Date());
+    map.set('caretPosition', null);
+    map.set('preselectDate', new Date());
+    map.set('idempotencyKey', uuid());
+
+    if (action.status.get('spoiler_text').length > 0) {
+      let spoilerText = action.status.get('spoiler_text');
+      if (action.prependCWRe && !spoilerText.match(/^(re|qt)[: ]/i)) {
+        spoilerText = isQuote ? `QT: ${spoilerText}` : `re: ${spoilerText}`;
+      }
+      map.set('spoiler', true);
+      map.set('spoiler_text', spoilerText);
+    } else {
+      map.set('spoiler', false);
+      map.set('spoiler_text', '');
+    }
+
+    if (isQuote) {
+      map.set('in_reply_to', null);
+      map.set('quote_id', parentStatusId);
+      map.set('text', '');
+    } else {
+      map.set('in_reply_to', parentStatusId);
+      map.set('quote_id', null);
+      map.set('text', statusToTextMentions(state, action.status));
+
+      if (action.status.get('language')) {
+        map.set('language', action.status.get('language'));
+      }
+    }
+  });
+};
+
 export default function compose(state = initialState, action) {
   switch(action.type) {
   case STORE_HYDRATE:
@@ -411,55 +456,8 @@ export default function compose(state = initialState, action) {
     return state
       .set('elefriend', (state.get('elefriend') + 1) % totalElefriends);
   case COMPOSE_REPLY:
-    return state.withMutations(map => {
-      map.set('id', null);
-      map.set('in_reply_to', action.status.get('id'));
-      map.set('quote_id', null);
-      map.set('text', statusToTextMentions(state, action.status));
-      map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
-      map.update(
-        'advanced_options',
-        map => map.merge(new ImmutableMap({ do_not_federate: !!action.status.get('local_only') }))
-      );
-      map.set('focusDate', new Date());
-      map.set('caretPosition', null);
-      map.set('preselectDate', new Date());
-      map.set('idempotencyKey', uuid());
-
-      if (action.status.get('language') && !action.status.has('translation')) {
-        map.set('language', action.status.get('language'));
-      } else {
-        map.set('language', state.get('default_language'));
-      }
-
-      if (action.status.get('spoiler_text').length > 0) {
-        let spoiler_text = action.status.get('spoiler_text');
-        if (action.prependCWRe && !spoiler_text.match(/^re[: ]/i)) {
-          spoiler_text = 're: '.concat(spoiler_text);
-        }
-        map.set('spoiler', true);
-        map.set('spoiler_text', spoiler_text);
-      } else {
-        map.set('spoiler', false);
-        map.set('spoiler_text', '');
-      }
-    });
   case COMPOSE_QUOTE:
-    return state.withMutations(map => {
-      map.set('id', null);
-      map.set('in_reply_to', null);
-      map.set('quote_id', action.status.get('id'));
-      map.set('text', '');
-      map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
-      map.update(
-        'advanced_options',
-        map => map.merge(new ImmutableMap({ do_not_federate: !!action.status.get('local_only') }))
-      );
-      map.set('focusDate', new Date());
-      map.set('caretPosition', null);
-      map.set('preselectDate', new Date());
-      map.set('idempotencyKey', uuid());
-    });
+    return updateWithReply(state, action);
   case COMPOSE_REPLY_CANCEL:
     state = state.setIn(['advanced_options', 'threaded_mode'], false);
   case COMPOSE_QUOTE_CANCEL:
