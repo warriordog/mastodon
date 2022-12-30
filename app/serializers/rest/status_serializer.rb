@@ -13,10 +13,12 @@ class REST::StatusSerializer < ActiveModel::Serializer
   attribute :muted, if: :current_user?
   attribute :bookmarked, if: :current_user?
   attribute :pinned, if: :pinnable?
+  attribute :local_only if :local?
   has_many :filtered, serializer: REST::FilterResultSerializer, if: :current_user?
 
   attribute :content, unless: :source_requested?
   attribute :text, if: :source_requested?
+  attribute :content_type, if: :source_requested?
 
   belongs_to :reblog, serializer: REST::StatusSerializer
   belongs_to :application, if: :show_application?

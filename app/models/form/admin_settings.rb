@@ -14,20 +14,28 @@ class Form::AdminSettings
     closed_registrations_message
     timeline_preview
     bootstrap_timeline_accounts
-    theme
+    flavour
+    skin
     activity_api_enabled
     peers_api_enabled
     preview_sensitive_media
     custom_css
     profile_directory
+    hide_followers_count
+    flavour_and_skin
     thumbnail
     mascot
+    show_reblogs_in_public_timelines
+    show_replies_in_public_timelines
     trends
     trendable_by_default
+    trending_status_cw
     show_domain_blocks
     show_domain_blocks_rationale
     noindex
+    outgoing_spoilers
     require_invite_text
+    captcha_enabled
     media_cache_retention_period
     content_cache_retention_period
     backups_retention_period
@@ -45,15 +53,24 @@ class Form::AdminSettings
     peers_api_enabled
     preview_sensitive_media
     profile_directory
+    hide_followers_count
+    show_reblogs_in_public_timelines
+    show_replies_in_public_timelines
     trends
     trendable_by_default
+    trending_status_cw
     noindex
     require_invite_text
+    captcha_enabled
   ).freeze
 
   UPLOAD_KEYS = %i(
     thumbnail
     mascot
+  ).freeze
+
+  PSEUDO_KEYS = %i(
+    flavour_and_skin
   ).freeze
 
   attr_accessor(*KEYS)
@@ -94,7 +111,7 @@ class Form::AdminSettings
     return false unless valid?
 
     KEYS.each do |key|
-      next unless instance_variable_defined?("@#{key}")
+      next if PSEUDO_KEYS.include?(key) || !instance_variable_defined?("@#{key}")
 
       if UPLOAD_KEYS.include?(key)
         public_send(key).save
@@ -103,6 +120,14 @@ class Form::AdminSettings
         setting.update(value: typecast_value(key, instance_variable_get("@#{key}")))
       end
     end
+  end
+
+  def flavour_and_skin
+    "#{Setting.flavour}/#{Setting.skin}"
+  end
+
+  def flavour_and_skin=(value)
+    @flavour, @skin = value.split('/', 2)
   end
 
   private

@@ -63,6 +63,7 @@ class Api::V1::StatusesController < Api::BaseController
       scheduled_at: status_params[:scheduled_at],
       application: doorkeeper_token.application,
       poll: status_params[:poll],
+      content_type: status_params[:content_type],
       idempotency: request.headers['Idempotency-Key'],
       with_rate_limit: true
     )
@@ -82,7 +83,8 @@ class Api::V1::StatusesController < Api::BaseController
       sensitive: status_params[:sensitive],
       language: status_params[:language],
       spoiler_text: status_params[:spoiler_text],
-      poll: status_params[:poll]
+      poll: status_params[:poll],
+      content_type: status_params[:content_type]
     )
 
     render json: @status, serializer: REST::StatusSerializer
@@ -127,6 +129,7 @@ class Api::V1::StatusesController < Api::BaseController
       :visibility,
       :language,
       :scheduled_at,
+      :content_type,
       media_ids: [],
       poll: [
         :multiple,

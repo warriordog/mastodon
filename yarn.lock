@@ -2485,6 +2485,11 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
+atrament@0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/atrament/-/atrament-0.2.4.tgz#6f78196edfcd194e568b7c0b9c88201ec371ac66"
+  integrity sha512-hSA9VwW6COMwvRhSEO4uZweZ91YGOdHqwvslNyrJZG+8mzc4qx/qMsDZBuAeXFeWZO/QKtRjIXguOUy1aNMl3A==
+
 autoprefixer@^9.8.8:
   version "9.8.8"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-9.8.8.tgz#fd4bd4595385fa6f06599de749a4d5f7a474957a"
@@ -4851,6 +4856,11 @@ fastq@^1.6.0:
   integrity sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==
   dependencies:
     reusify "^1.0.4"
+
+favico.js@^0.3.10:
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/favico.js/-/favico.js-0.3.10.tgz#80586e27a117f24a8d51c18a99bdc714d4339301"
+  integrity sha1-gFhuJ6EX8kqNUcGKmb3HFNQzkwE=
 
 faye-websocket@^0.11.3:
   version "0.11.3"

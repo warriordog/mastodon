@@ -4,6 +4,7 @@ module WebAppControllerConcern
   extend ActiveSupport::Concern
 
   included do
+    before_action :set_pack
     before_action :redirect_unauthenticated_to_permalinks!
     before_action :set_app_body_class
     before_action :set_referrer_policy_header
@@ -23,5 +24,9 @@ module WebAppControllerConcern
     redirect_path = PermalinkRedirector.new(request.path).redirect_path
 
     redirect_to(redirect_path) if redirect_path.present?
+  end
+
+  def set_pack
+    use_pack 'home'
   end
 end

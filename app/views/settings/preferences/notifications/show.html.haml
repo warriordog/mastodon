@@ -22,6 +22,8 @@
       = ff.input :appeal, as: :boolean, wrapper: :with_label if current_user.can?(:manage_appeals)
       = ff.input :pending_account, as: :boolean, wrapper: :with_label if current_user.can?(:manage_users)
       = ff.input :trending_tag, as: :boolean, wrapper: :with_label if current_user.can?(:manage_taxonomies)
+      = ff.input :trending_link, as: :boolean, wrapper: :with_label if current_user.can?(:manage_taxonomies)
+      = ff.input :trending_status, as: :boolean, wrapper: :with_label if current_user.can?(:manage_taxonomies)
 
   .fields-group
     = f.input :setting_always_send_emails, as: :boolean, wrapper: :with_label

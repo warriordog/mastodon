@@ -879,6 +879,7 @@ ActiveRecord::Schema.define(version: 2022_12_06_114142) do
     t.text "spoiler_text", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "content_type"
     t.bigint "ordered_media_attachment_ids", array: true
     t.text "media_descriptions", array: true
     t.string "poll_options", array: true
@@ -935,7 +936,9 @@ ActiveRecord::Schema.define(version: 2022_12_06_114142) do
     t.bigint "account_id", null: false
     t.bigint "application_id"
     t.bigint "in_reply_to_account_id"
+    t.boolean "local_only"
     t.bigint "poll_id"
+    t.string "content_type"
     t.datetime "deleted_at"
     t.datetime "edited_at"
     t.boolean "trendable"

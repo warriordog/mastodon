@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       resource :setup, only: [:show, :update], controller: :setup
       resource :challenge, only: [:create], controller: :challenges
       get 'sessions/security_key_options', to: 'sessions#webauthn_options'
+      post 'captcha_confirmation', to: 'confirmations#confirm_captcha', as: :captcha_confirmation
     end
   end
 
@@ -179,6 +180,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :flavours, only: [:index, :show, :update], param: :flavour
+
     resource :delete, only: [:show, :destroy]
     resource :migration, only: [:show, :create]
 
@@ -271,6 +274,7 @@ Rails.application.routes.draw do
       resource :about, only: [:show, :update], controller: 'about'
       resource :appearance, only: [:show, :update], controller: 'appearance'
       resource :discovery, only: [:show, :update], controller: 'discovery'
+      resource :other, only: [:show, :update], controller: 'other'
     end
 
     resources :site_uploads, only: [:destroy]
@@ -459,6 +463,7 @@ Rails.application.routes.draw do
       end
 
       namespace :timelines do
+        resource :direct, only: :show, controller: :direct
         resource :home, only: :show, controller: :home
         resource :public, only: :show, controller: :public
         resources :tag, only: :show
@@ -551,9 +556,10 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :notifications, only: [:index, :show] do
+      resources :notifications, only: [:index, :show, :destroy] do
         collection do
           post :clear
+          delete :destroy_multiple
         end
 
         member do
