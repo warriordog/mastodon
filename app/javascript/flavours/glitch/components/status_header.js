@@ -6,7 +6,6 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 //  Mastodon imports.
 import Avatar from './avatar';
 import AvatarOverlay from './avatar_overlay';
-import AvatarComposite from './avatar_composite';
 import DisplayName from './display_name';
 
 export default class StatusHeader extends React.PureComponent {
@@ -15,6 +14,7 @@ export default class StatusHeader extends React.PureComponent {
     status: ImmutablePropTypes.map.isRequired,
     friend: ImmutablePropTypes.map,
     parseClick: PropTypes.func.isRequired,
+    useLocalLinks: PropTypes.bool,
   };
 
   //  Handles clicks on account name/image
@@ -33,9 +33,11 @@ export default class StatusHeader extends React.PureComponent {
     const {
       status,
       friend,
+      useLocalLinks,
     } = this.props;
 
     const account = status.get('account');
+    const accountUrl = useLocalLinks ? `/@${account.get('acct')}` : account.get('url');
 
     let statusAvatar;
     if (friend === undefined || friend === null) {
@@ -47,7 +49,7 @@ export default class StatusHeader extends React.PureComponent {
     return (
       <div className='status__info__account'>
         <a
-          href={account.get('url')}
+          href={accountUrl}
           target='_blank'
           className='status__avatar'
           onClick={this.handleAccountClick}
@@ -56,7 +58,7 @@ export default class StatusHeader extends React.PureComponent {
           {statusAvatar}
         </a>
         <a
-          href={account.get('url')}
+          href={accountUrl}
           target='_blank'
           className='status__display-name'
           onClick={this.handleAccountClick}

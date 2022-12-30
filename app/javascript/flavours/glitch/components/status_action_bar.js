@@ -76,6 +76,7 @@ class StatusActionBar extends ImmutablePureComponent {
     showReplyCount: PropTypes.bool,
     scrollKey: PropTypes.string,
     intl: PropTypes.object.isRequired,
+    useLocalLinks: PropTypes.bool,
   };
 
   // Avoid checking props that are functions (and whose equality will always
@@ -196,7 +197,7 @@ class StatusActionBar extends ImmutablePureComponent {
   }
 
   render () {
-    const { status, intl, withDismiss, withCounters, showReplyCount, scrollKey } = this.props;
+    const { status, intl, withDismiss, withCounters, showReplyCount, scrollKey, useLocalLinks } = this.props;
 
     const anonymousAccess    = !me;
     const mutingConversation = status.get('muted');
@@ -298,6 +299,8 @@ class StatusActionBar extends ImmutablePureComponent {
       <IconButton className='status__action-bar-button' title={intl.formatMessage(messages.hide)} icon='eye' onClick={this.handleHideClick} />
     );
 
+    const statusUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}\/${status.get('id')}` : status.get('url');
+
     return (
       <div className='status__action-bar'>
         <IconButton
@@ -329,7 +332,7 @@ class StatusActionBar extends ImmutablePureComponent {
         </div>
 
         <div className='status__action-bar-spacer' />
-        <a href={status.get('url')} className='status__relative-time' target='_blank' rel='noopener'>
+        <a href={statusUrl} className='status__relative-time' target='_blank' rel='noopener'>
           <RelativeTimestamp timestamp={status.get('created_at')} />{status.get('edited_at') && <abbr title={intl.formatMessage(messages.edited, { date: intl.formatDate(status.get('edited_at'), { hour12: false, year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }) })}> *</abbr>}
         </a>
       </div>

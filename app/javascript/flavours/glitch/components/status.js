@@ -106,6 +106,7 @@ class Status extends ImmutablePureComponent {
       inUse: PropTypes.bool,
       available: PropTypes.bool,
     }),
+    useLocalLinks: PropTypes.bool,
   };
 
   state = {
@@ -512,6 +513,7 @@ class Status extends ImmutablePureComponent {
       unread,
       featured,
       pictureInPicture,
+      useLocalLinks,
       ...other
     } = this.props;
     const { isCollapsed, forceFilter } = this.state;
@@ -735,6 +737,7 @@ class Status extends ImmutablePureComponent {
           account={account}
           parseClick={parseClick}
           notificationId={this.props.notificationId}
+          useLocalLinks={useLocalLinks}
         />
       );
     }
@@ -774,6 +777,7 @@ class Status extends ImmutablePureComponent {
                   friend={account}
                   collapsed={isCollapsed}
                   parseClick={parseClick}
+                  useLocalLinks={useLocalLinks}
                 />
               ) : null}
             </span>
@@ -798,6 +802,7 @@ class Status extends ImmutablePureComponent {
             disabled={!router}
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
+            useLocalLinks={useLocalLinks}
           />
 
           {!isCollapsed || !(muted || !settings.getIn(['collapsed', 'show_action_bar'])) ? (
@@ -806,6 +811,7 @@ class Status extends ImmutablePureComponent {
               account={status.get('account')}
               showReplyCount={settings.get('show_reply_count')}
               onFilter={matchedFilters ? this.handleFilterClick : null}
+              useLocalLinks={useLocalLinks}
               {...other}
             />
           ) : null}

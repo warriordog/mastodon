@@ -121,6 +121,7 @@ class StatusContent extends React.PureComponent {
     tagLinks: PropTypes.bool,
     rewriteMentions: PropTypes.string,
     intl: PropTypes.object,
+    useLocalLinks: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -312,6 +313,7 @@ class StatusContent extends React.PureComponent {
       tagLinks,
       rewriteMentions,
       intl,
+      useLocalLinks,
     } = this.props;
 
     const hidden = this.props.onExpandedToggle ? !this.props.expanded : this.state.hidden;
@@ -332,16 +334,19 @@ class StatusContent extends React.PureComponent {
     if (status.get('spoiler_text').length > 0) {
       let mentionsPlaceholder = '';
 
-      const mentionLinks = status.get('mentions').map(item => (
-        <Permalink
-          to={`/@${item.get('acct')}`}
-          href={item.get('url')}
-          key={item.get('id')}
-          className='mention'
-        >
-          @<span>{item.get('username')}</span>
-        </Permalink>
-      )).reduce((aggregate, item) => [...aggregate, item, ' '], []);
+      const mentionLinks = status.get('mentions').map(item => {
+        const itemUrl = useLocalLinks ? `/@${item.get('acct')}` : item.get('url');
+        return (
+          <Permalink
+            to={`/@${item.get('acct')}`}
+            href={itemUrl}
+            key={item.get('id')}
+            className="mention"
+          >
+            @<span>{item.get('username')}</span>
+          </Permalink>
+        );
+      }).reduce((aggregate, item) => [...aggregate, item, ' '], []);
 
       let toggleText = null;
       if (hidden) {
