@@ -175,6 +175,8 @@
   "settings.swipe_to_change_columns": "Allow swiping to change columns (Mobile only)",
   "settings.tag_misleading_links": "Tag misleading links",
   "settings.tag_misleading_links.hint": "Add a visual indication with the link target host to every link not mentioning it explicitly",
+  "settings.use_local_links": "Use local links",
+  "settings.use_local_links.hint": "Open remote posts and profiles through this instance's view",
   "settings.wide_view": "Wide view (Desktop mode only)",
   "settings.wide_view_hint": "Stretches columns to better fill the available space.",
   "status.collapse": "Collapse",

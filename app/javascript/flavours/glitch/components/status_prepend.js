@@ -13,6 +13,7 @@ export default class StatusPrepend extends React.PureComponent {
     account: ImmutablePropTypes.map.isRequired,
     parseClick: PropTypes.func.isRequired,
     notificationId: PropTypes.number,
+    useLocalLinks: PropTypes.bool,
   };
 
   handleClick = (e) => {
@@ -21,11 +22,12 @@ export default class StatusPrepend extends React.PureComponent {
   }
 
   Message = () => {
-    const { type, account } = this.props;
+    const { type, account, useLocalLinks } = this.props;
+    const accountUrl = useLocalLinks ? `/@${account.get('acct')}` : account.get('url');
     let link = (
       <a
         onClick={this.handleClick}
-        href={account.get('url')}
+        href={accountUrl}
         className='status__display-name'
       >
         <b

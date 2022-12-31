@@ -1,26 +1,9 @@
 import { connect } from 'react-redux';
 import DetailedStatus from '../components/detailed_status';
 import { makeGetStatus } from 'flavours/glitch/selectors';
-import {
-  replyCompose,
-  mentionCompose,
-  directCompose,
-} from 'flavours/glitch/actions/compose';
-import {
-  reblog,
-  favourite,
-  unreblog,
-  unfavourite,
-  pin,
-  unpin,
-} from 'flavours/glitch/actions/interactions';
-import {
-  muteStatus,
-  unmuteStatus,
-  deleteStatus,
-  hideStatus,
-  revealStatus,
-} from 'flavours/glitch/actions/statuses';
+import { directCompose, mentionCompose, replyCompose } from 'flavours/glitch/actions/compose';
+import { favourite, pin, reblog, unfavourite, unpin, unreblog } from 'flavours/glitch/actions/interactions';
+import { deleteStatus, muteStatus, unmuteStatus } from 'flavours/glitch/actions/statuses';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
@@ -42,11 +25,17 @@ const messages = defineMessages({
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
 
-  const mapStateToProps = (state, props) => ({
-    status: getStatus(state, props),
-    domain: state.getIn(['meta', 'domain']),
-    settings: state.get('local_settings'),
-  });
+  const mapStateToProps = (state, props) => {
+    const settings = state.get('local_settings');
+    const useLocalLinks = props.useLocalLinks || settings.get('use_local_links');
+
+    return ({
+      status: getStatus(state, props),
+      domain: state.getIn(['meta', 'domain']),
+      settings,
+      useLocalLinks,
+    });
+  };
 
   return mapStateToProps;
 };

@@ -7,7 +7,7 @@ import StatusContent from 'flavours/glitch/components/status_content';
 import MediaGallery from 'flavours/glitch/components/media_gallery';
 import AttachmentList from 'flavours/glitch/components/attachment_list';
 import { Link } from 'react-router-dom';
-import { injectIntl, FormattedDate } from 'react-intl';
+import { FormattedDate, injectIntl } from 'react-intl';
 import Card from './card';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Video from 'flavours/glitch/features/video';
@@ -44,6 +44,7 @@ class DetailedStatus extends ImmutablePureComponent {
     usingPiP: PropTypes.bool,
     onToggleMediaVisibility: PropTypes.func,
     intl: PropTypes.object.isRequired,
+    useLocalLinks: PropTypes.bool,
   };
 
   state = {
@@ -120,7 +121,7 @@ class DetailedStatus extends ImmutablePureComponent {
 
   render () {
     const status = (this.props.status && this.props.status.get('reblog')) ? this.props.status.get('reblog') : this.props.status;
-    const { expanded, onToggleHidden, settings, usingPiP, intl } = this.props;
+    const { expanded, onToggleHidden, settings, usingPiP, intl, useLocalLinks } = this.props;
     const outerStyle = { boxSizing: 'border-box' };
     const { compact } = this.props;
 
@@ -295,10 +296,13 @@ class DetailedStatus extends ImmutablePureComponent {
       );
     }
 
+    const accountUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}}` : status.getIn(['account', 'url']);
+    const statusUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}\/${status.get('id')}` : status.get('url');
+
     return (
       <div style={outerStyle}>
         <div ref={this.setRef} className={classNames('detailed-status', `detailed-status-${status.get('visibility')}`, { compact })} data-status-by={status.getIn(['account', 'acct'])}>
-          <a href={status.getIn(['account', 'url'])} onClick={this.handleAccountClick} className='detailed-status__display-name'>
+          <a href={accountUrl} onClick={this.handleAccountClick} className='detailed-status__display-name'>
             <div className='detailed-status__display-avatar'><Avatar account={status.get('account')} size={48} /></div>
             <DisplayName account={status.get('account')} localDomain={this.props.domain} />
           </a>
@@ -317,10 +321,11 @@ class DetailedStatus extends ImmutablePureComponent {
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
             disabled
+            useLocalLinks={useLocalLinks}
           />
 
           <div className='detailed-status__meta'>
-            <a className='detailed-status__datetime' href={status.get('url')} target='_blank' rel='noopener noreferrer'>
+            <a className='detailed-status__datetime' href={statusUrl} target='_blank' rel='noopener noreferrer'>
               <FormattedDate value={new Date(status.get('created_at'))} hour12={false} year='numeric' month='short' day='2-digit' hour='2-digit' minute='2-digit' />
             </a>{edited}{visibilityLink}{applicationLink}{reblogLink} · {favouriteLink}
           </div>

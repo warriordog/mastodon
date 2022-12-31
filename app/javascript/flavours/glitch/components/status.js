@@ -8,9 +8,9 @@ import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
 import AttachmentList from './attachment_list';
 import Card from '../features/status/components/card';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { MediaGallery, Video, Audio } from '../features/ui/util/async-components';
+import { Audio, MediaGallery, Video } from '../features/ui/util/async-components';
 import { HotKeys } from 'react-hotkeys';
 import NotificationOverlayContainer from 'flavours/glitch/features/notifications/containers/overlay_container';
 import classNames from 'classnames';
@@ -106,6 +106,7 @@ class Status extends ImmutablePureComponent {
       inUse: PropTypes.bool,
       available: PropTypes.bool,
     }),
+    useLocalLinks: PropTypes.bool,
   };
 
   state = {
@@ -132,6 +133,7 @@ class Status extends ImmutablePureComponent {
     'expanded',
     'unread',
     'pictureInPicture',
+    'useLocalLinks',
   ]
 
   updateOnStates = [
@@ -512,6 +514,7 @@ class Status extends ImmutablePureComponent {
       unread,
       featured,
       pictureInPicture,
+      useLocalLinks,
       ...other
     } = this.props;
     const { isCollapsed, forceFilter } = this.state;
@@ -735,6 +738,7 @@ class Status extends ImmutablePureComponent {
           account={account}
           parseClick={parseClick}
           notificationId={this.props.notificationId}
+          useLocalLinks={useLocalLinks}
         />
       );
     }
@@ -774,6 +778,7 @@ class Status extends ImmutablePureComponent {
                   friend={account}
                   collapsed={isCollapsed}
                   parseClick={parseClick}
+                  useLocalLinks={useLocalLinks}
                 />
               ) : null}
             </span>
@@ -798,6 +803,7 @@ class Status extends ImmutablePureComponent {
             disabled={!router}
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
+            useLocalLinks={useLocalLinks}
           />
 
           {!isCollapsed || !(muted || !settings.getIn(['collapsed', 'show_action_bar'])) ? (
@@ -806,6 +812,7 @@ class Status extends ImmutablePureComponent {
               account={status.get('account')}
               showReplyCount={settings.get('show_reply_count')}
               onFilter={matchedFilters ? this.handleFilterClick : null}
+              useLocalLinks={useLocalLinks}
               {...other}
             />
           ) : null}
