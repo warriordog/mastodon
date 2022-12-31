@@ -2,21 +2,22 @@
 
 ---
 
-Mastodon-hk is a customized fork of [Mastodon](https://github.com/mastodon/mastodon)
+Mastodon-hk is a customized version of the [Glitch-soc Mastodon fork](https://github.com/glitch-soc/mastodon)
 with a few minor changes to improve usability.
 
-## Differences from vanilla Mastodon
-* Max post length increased to 5000 (from 500)
+## Differences from glitch-soc
+* New setting "use local links" added to restore the vanilla mastodon behavior of opening profiles and posts through the local instance.
 * Rearranged desktop UI
   * Two columns instead of three
   * Wider content area
   * Wider compose panel
   * Wider search bar
-* Link to app is removed
 
 ## Planned changes
-* Filter from home only (allow in lists) 
+* Filter from home only (allow in lists)
+* Link to app is removed
+* Wide UI implemented as a separate flavor
 
 ## Usage
-Follow standard instructions for vanilla Mastodon.
+Follow standard instructions for glitch-soc.
 No workflow changes are needed!
