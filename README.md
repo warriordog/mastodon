@@ -1,4 +1,4 @@
-# Mastadon-hk - custom fork of Mastodon federated social network server
+# Mastodon-hk - custom fork of Mastodon federated social network server
 
 ---
 
