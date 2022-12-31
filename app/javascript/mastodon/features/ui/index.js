@@ -10,52 +10,53 @@ import LoadingBarContainer from './containers/loading_bar_container';
 import ModalContainer from './containers/modal_container';
 import { layoutFromWindow } from 'mastodon/is_mobile';
 import { debounce } from 'lodash';
-import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
+import { changeComposeSpoilerness, resetCompose, uploadCompose } from '../../actions/compose';
 import { expandHomeTimeline } from '../../actions/timelines';
 import { expandNotifications } from '../../actions/notifications';
 import { fetchServer } from '../../actions/server';
 import { clearHeight } from '../../actions/height_cache';
-import { focusApp, unfocusApp, changeLayout } from 'mastodon/actions/app';
-import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'mastodon/actions/markers';
-import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
+import { changeLayout, focusApp, unfocusApp } from 'mastodon/actions/app';
+import { fetchMarkers, submitMarkers, synchronouslySubmitMarkers } from 'mastodon/actions/markers';
+import { WrappedRoute, WrappedSwitch } from './util/react_router_helpers';
 import BundleColumnError from './components/bundle_column_error';
 import UploadArea from './components/upload_area';
 import ColumnsAreaContainer from './containers/columns_area_container';
 import PictureInPicture from 'mastodon/features/picture_in_picture';
 import {
-  Compose,
-  Status,
-  GettingStarted,
-  KeyboardShortcuts,
-  PublicTimeline,
-  CommunityTimeline,
-  AccountTimeline,
+  About,
   AccountGallery,
-  HomeTimeline,
+  AccountTimeline,
+  Blocks,
+  BookmarkedStatuses,
+  CommunityTimeline,
+  Compose,
+  Directory,
+  DirectTimeline,
+  DomainBlocks,
+  Explore,
+  FavouritedStatuses,
+  Favourites,
   Followers,
   Following,
-  Reblogs,
-  Favourites,
-  DirectTimeline,
-  HashtagTimeline,
-  Notifications,
-  FollowRequests,
-  FavouritedStatuses,
-  BookmarkedStatuses,
-  ListTimeline,
-  Blocks,
-  DomainBlocks,
-  Mutes,
-  PinnedStatuses,
-  Lists,
-  Directory,
-  Explore,
   FollowRecommendations,
-  About,
+  FollowRequests,
+  GettingStarted,
+  HashtagTimeline,
+  HomeTimeline,
+  KeyboardShortcuts,
+  Lists,
+  ListTimeline,
+  Mutes,
+  Notifications,
+  PinnedStatuses,
   PrivacyPolicy,
+  PublicTimeline,
+  Reblogs,
+  Status,
 } from './util/async-components';
-import initialState, { me, owner, singleUserMode, showTrends } from '../../initial_state';
+import initialState, { me, owner, showTrends, singleUserMode } from '../../initial_state';
 import { closeOnboarding, INTRODUCTION_VERSION } from 'mastodon/actions/onboarding';
+import Header from './components/header';
 
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.
@@ -67,7 +68,7 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   layout: state.getIn(['meta', 'layout']),
-  isComposing: state.getIn(['compose', 'visible']),
+  isComposing: state.getIn(['compose', 'is_composing']),
   hasComposingText: state.getIn(['compose', 'text']).trim().length !== 0,
   hasMediaAttachments: state.getIn(['compose', 'media_attachments']).size > 0,
   canUploadMore: !state.getIn(['compose', 'media_attachments']).some(x => ['audio', 'video'].includes(x.get('type'))) && state.getIn(['compose', 'media_attachments']).size < 4,
@@ -567,6 +568,8 @@ class UI extends React.PureComponent {
     return (
       <HotKeys keyMap={keyMap} handlers={handlers} ref={this.setHotkeysRef} attach={window} focused>
         <div className={classNames('ui', { 'is-composing': isComposing })} ref={this.setRef} style={{ pointerEvents: dropdownMenuIsOpen ? 'none' : null }}>
+          <Header />
+
           <SwitchingColumnsArea location={location} mobile={layout === 'mobile' || layout === 'single-column'}>
             {children}
           </SwitchingColumnsArea>

@@ -30,7 +30,6 @@ const messages = defineMessages({
   publish: { id: 'compose_form.publish', defaultMessage: 'Publish' },
   publishLoud: { id: 'compose_form.publish_loud', defaultMessage: '{publish}!' },
   saveChanges: { id: 'compose_form.save_changes', defaultMessage: 'Save changes' },
-  cancel: { id: 'compose_form.cancel', defaultMessage: 'Cancel' },
 });
 
 export default @injectIntl
@@ -66,13 +65,9 @@ class ComposeForm extends ImmutablePureComponent {
     anyMedia: PropTypes.bool,
     isInReply: PropTypes.bool,
     singleColumn: PropTypes.bool,
-    inlineButtons: PropTypes.bool,
-    onCancel: PropTypes.func,
   };
 
   static defaultProps = {
-    showSearch: false,
-    inlineButtons: false,
     autoFocus: false,
   };
 
@@ -211,15 +206,19 @@ class ComposeForm extends ImmutablePureComponent {
     this.props.onPickEmoji(position, data, needsSpace);
   }
 
-  cancelForm = () => {
-    if (this.props.onCancel) {
-      this.props.onCancel();
-    }
-  }
-
   render () {
-    const { intl, onPaste, showSearch, autoFocus } = this.props;
+    const { intl, onPaste, autoFocus } = this.props;
     const disabled = this.props.isSubmitting;
+
+    let publishText = '';
+
+    if (this.props.isEditing) {
+      publishText = intl.formatMessage(messages.saveChanges);
+    } else if (this.props.privacy === 'private' || this.props.privacy === 'direct') {
+      publishText = <span className='compose-form__publish-private'><Icon id='lock' /> {intl.formatMessage(messages.publish)}</span>;
+    } else {
+      publishText = this.props.privacy !== 'unlisted' ? intl.formatMessage(messages.publishLoud, { publish: intl.formatMessage(messages.publish) }) : intl.formatMessage(messages.publish);
+    }
 
     return (
       <form className='compose-form' onSubmit={this.handleSubmit}>
@@ -269,61 +268,31 @@ class ComposeForm extends ImmutablePureComponent {
         </AutosuggestTextarea>
 
         <div className='compose-form__buttons-wrapper'>
-          <UploadButtonContainer />
-          <PollButtonContainer />
-          <PrivacyDropdownContainer disabled={this.props.isEditing} />
-          <SpoilerButtonContainer />
-          <LanguageDropdown />
+          <div className='compose-form__buttons'>
+            <UploadButtonContainer />
+            <PollButtonContainer />
+            <PrivacyDropdownContainer disabled={this.props.isEditing} />
+            <SpoilerButtonContainer />
+            <LanguageDropdown />
+          </div>
 
-          <div className='flex-spacer' />
-
-          <CharacterCounter max={maxChars} text={this.getFulltextForCharacterCounting()} />
-
-          {inlineButtons && (
-            <React.Fragment>
-              <Button
-                type='button'
-                className='compose-form-action-button'
-                text={intl.formatMessage(messages.cancel)}
-                block={!inlineButtons}
-                secondary
-                onClick={this.cancelForm}
-              />
-
-              {this.renderSubmitButton(intl, inlineButtons)}
-            </React.Fragment>
-          )}
+          <div className='character-counter__wrapper'>
+            <CharacterCounter max={maxChars} text={this.getFulltextForCharacterCounting()} />
+          </div>
         </div>
 
-        {!inlineButtons && (
-          <div className='compose-form__publish'>
-            <div className='compose-form__publish-button-wrapper'>
-              {this.renderSubmitButton(intl, inlineButtons)}
-            </div>
+        <div className='compose-form__publish'>
+          <div className='compose-form__publish-button-wrapper'>
+            <Button
+              type='submit'
+              text={publishText}
+              disabled={!this.canSubmit()}
+              block
+            />
           </div>
-        )}
+        </div>
       </form>
     );
-  }
-
-  renderSubmitButton(intl, inlineButtons) {
-    let publishText = '';
-
-    if (this.props.isEditing) {
-      publishText = intl.formatMessage(messages.saveChanges);
-    } else if (this.props.privacy === 'private' || this.props.privacy === 'direct') {
-      publishText = <span className='compose-form__publish-private'><Icon id='lock' /> {intl.formatMessage(messages.publish)}</span>;
-    } else {
-      publishText = this.props.privacy !== 'unlisted' ? intl.formatMessage(messages.publishLoud, { publish: intl.formatMessage(messages.publish) }) : intl.formatMessage(messages.publish);
-    }
-
-    return (<Button
-      type='submit'
-      className='compose-form-action-button'
-      text={publishText}
-      disabled={!this.canSubmit()}
-      block={!inlineButtons}
-    />);
   }
 
 }

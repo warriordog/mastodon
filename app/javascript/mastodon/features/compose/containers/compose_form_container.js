@@ -2,12 +2,12 @@ import { connect } from 'react-redux';
 import ComposeForm from '../components/compose_form';
 import {
   changeCompose,
-  submitCompose,
+  changeComposeSpoilerText,
   clearComposeSuggestions,
   fetchComposeSuggestions,
-  selectComposeSuggestion,
-  changeComposeSpoilerText,
   insertEmojiCompose,
+  selectComposeSuggestion,
+  submitCompose,
   uploadCompose,
 } from '../../../actions/compose';
 
@@ -28,16 +28,13 @@ const mapStateToProps = state => ({
   isInReply: state.getIn(['compose', 'in_reply_to']) !== null,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
 
   onChange (text) {
     dispatch(changeCompose(text));
   },
 
   onSubmit (router) {
-    if (ownProps.onSubmit) {
-      ownProps.onSubmit();
-    }
     dispatch(submitCompose(router));
   },
 

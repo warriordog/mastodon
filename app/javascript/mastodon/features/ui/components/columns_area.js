@@ -7,21 +7,22 @@ import ColumnLoading from './column_loading';
 import DrawerLoading from './drawer_loading';
 import BundleColumnError from './bundle_column_error';
 import {
-  Compose,
-  Notifications,
-  HomeTimeline,
+  BookmarkedStatuses,
   CommunityTimeline,
-  PublicTimeline,
-  HashtagTimeline,
+  Compose,
+  Directory,
   DirectTimeline,
   FavouritedStatuses,
-  BookmarkedStatuses,
+  HashtagTimeline,
+  HomeTimeline,
   ListTimeline,
-  Directory,
+  Notifications,
+  PublicTimeline,
 } from '../../ui/util/async-components';
+import ComposePanel from './compose_panel';
+import NavigationPanel from './navigation_panel';
 import { supportsPassiveEvents } from 'detect-passive-events';
 import { scrollRight } from '../../../scroll';
-import ColumnsAreaSingle from './columns_area_single';
 
 const componentMap = {
   'COMPOSE': Compose,
@@ -51,9 +52,25 @@ export default class ColumnsArea extends ImmutablePureComponent {
     children: PropTypes.node,
   };
 
+  // Corresponds to (max-width: $no-gap-breakpoint + 285px - 1px) in SCSS
+  mediaQuery = 'matchMedia' in window && window.matchMedia('(max-width: 1174px)');
+
+  state = {
+    renderComposePanel: !(this.mediaQuery && this.mediaQuery.matches),
+  }
+
   componentDidMount() {
     if (!this.props.singleColumn) {
       this.node.addEventListener('wheel', this.handleWheel, supportsPassiveEvents ? { passive: true } : false);
+    }
+
+    if (this.mediaQuery) {
+      if (this.mediaQuery.addEventListener) {
+        this.mediaQuery.addEventListener('change', this.handleLayoutChange);
+      } else {
+        this.mediaQuery.addListener(this.handleLayoutChange);
+      }
+      this.setState({ renderComposePanel: !this.mediaQuery.matches });
     }
 
     this.isRtlLayout = document.getElementsByTagName('body')[0].classList.contains('rtl');
@@ -75,6 +92,14 @@ export default class ColumnsArea extends ImmutablePureComponent {
     if (!this.props.singleColumn) {
       this.node.removeEventListener('wheel', this.handleWheel);
     }
+
+    if (this.mediaQuery) {
+      if (this.mediaQuery.removeEventListener) {
+        this.mediaQuery.removeEventListener('change', this.handleLayoutChange);
+      } else {
+        this.mediaQuery.removeListener(this.handleLayoutChange);
+      }
+    }
   }
 
   handleChildrenContentChange() {
@@ -82,6 +107,10 @@ export default class ColumnsArea extends ImmutablePureComponent {
       const modifier = this.isRtlLayout ? -1 : 1;
       this._interruptScrollAnimation = scrollRight(this.node, (this.node.scrollWidth - window.innerWidth) * modifier);
     }
+  }
+
+  handleLayoutChange = (e) => {
+    this.setState({ renderComposePanel: !e.matches });
   }
 
   handleWheel = () => {
@@ -106,11 +135,28 @@ export default class ColumnsArea extends ImmutablePureComponent {
 
   render () {
     const { columns, children, singleColumn, isModalOpen } = this.props;
-    const { router } = this.context;
+    const { renderComposePanel } = this.state;
 
     if (singleColumn) {
       return (
-        <ColumnsAreaSingle children={children} router={router} />
+        <div className='columns-area__panels'>
+          <div className='columns-area__panels__pane columns-area__panels__pane--compositional'>
+            <div className='columns-area__panels__pane__inner'>
+              {renderComposePanel && <ComposePanel />}
+            </div>
+          </div>
+
+          <div className='columns-area__panels__main'>
+            <div className='tabs-bar__wrapper'><div id='tabs-bar__portal' /></div>
+            <div className='columns-area columns-area--mobile'>{children}</div>
+          </div>
+
+          <div className='columns-area__panels__pane columns-area__panels__pane--start columns-area__panels__pane--navigational'>
+            <div className='columns-area__panels__pane__inner'>
+              <NavigationPanel />
+            </div>
+          </div>
+        </div>
       );
     }
 

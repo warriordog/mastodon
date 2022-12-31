@@ -1,64 +1,62 @@
 import {
-  COMPOSE_MOUNT,
-  COMPOSE_UNMOUNT,
-  COMPOSE_SHOW,
-  COMPOSE_HIDE,
   COMPOSE_CHANGE,
-  COMPOSE_REPLY,
-  COMPOSE_REPLY_CANCEL,
+  COMPOSE_CHANGE_MEDIA_DESCRIPTION,
+  COMPOSE_CHANGE_MEDIA_FOCUS,
+  COMPOSE_COMPOSING_CHANGE,
   COMPOSE_DIRECT,
-  COMPOSE_MENTION,
-  COMPOSE_SUBMIT_REQUEST,
-  COMPOSE_SUBMIT_SUCCESS,
-  COMPOSE_SUBMIT_FAIL,
-  COMPOSE_UPLOAD_REQUEST,
-  COMPOSE_UPLOAD_SUCCESS,
-  COMPOSE_UPLOAD_FAIL,
-  COMPOSE_UPLOAD_UNDO,
-  COMPOSE_UPLOAD_PROGRESS,
-  COMPOSE_UPLOAD_PROCESSING,
-  THUMBNAIL_UPLOAD_REQUEST,
-  THUMBNAIL_UPLOAD_SUCCESS,
-  THUMBNAIL_UPLOAD_FAIL,
-  THUMBNAIL_UPLOAD_PROGRESS,
-  COMPOSE_SUGGESTIONS_CLEAR,
-  COMPOSE_SUGGESTIONS_READY,
-  COMPOSE_SUGGESTION_SELECT,
-  COMPOSE_SUGGESTION_IGNORE,
-  COMPOSE_SUGGESTION_TAGS_UPDATE,
-  COMPOSE_TAG_HISTORY_UPDATE,
-  COMPOSE_SENSITIVITY_CHANGE,
-  COMPOSE_SPOILERNESS_CHANGE,
-  COMPOSE_SPOILER_TEXT_CHANGE,
-  COMPOSE_VISIBILITY_CHANGE,
-  COMPOSE_LANGUAGE_CHANGE,
   COMPOSE_EMOJI_INSERT,
-  COMPOSE_UPLOAD_CHANGE_REQUEST,
-  COMPOSE_UPLOAD_CHANGE_SUCCESS,
-  COMPOSE_UPLOAD_CHANGE_FAIL,
-  COMPOSE_RESET,
+  COMPOSE_LANGUAGE_CHANGE,
+  COMPOSE_MENTION,
+  COMPOSE_MOUNT,
   COMPOSE_POLL_ADD,
-  COMPOSE_POLL_REMOVE,
   COMPOSE_POLL_OPTION_ADD,
   COMPOSE_POLL_OPTION_CHANGE,
   COMPOSE_POLL_OPTION_REMOVE,
+  COMPOSE_POLL_REMOVE,
   COMPOSE_POLL_SETTINGS_CHANGE,
-  INIT_MEDIA_EDIT_MODAL,
-  COMPOSE_CHANGE_MEDIA_DESCRIPTION,
-  COMPOSE_CHANGE_MEDIA_FOCUS,
+  COMPOSE_REPLY,
+  COMPOSE_REPLY_CANCEL,
+  COMPOSE_RESET,
+  COMPOSE_SENSITIVITY_CHANGE,
   COMPOSE_SET_STATUS,
+  COMPOSE_SPOILER_TEXT_CHANGE,
+  COMPOSE_SPOILERNESS_CHANGE,
+  COMPOSE_SUBMIT_FAIL,
+  COMPOSE_SUBMIT_REQUEST,
+  COMPOSE_SUBMIT_SUCCESS,
+  COMPOSE_SUGGESTION_IGNORE,
+  COMPOSE_SUGGESTION_SELECT,
+  COMPOSE_SUGGESTION_TAGS_UPDATE,
+  COMPOSE_SUGGESTIONS_CLEAR,
+  COMPOSE_SUGGESTIONS_READY,
+  COMPOSE_TAG_HISTORY_UPDATE,
+  COMPOSE_UNMOUNT,
+  COMPOSE_UPLOAD_CHANGE_FAIL,
+  COMPOSE_UPLOAD_CHANGE_REQUEST,
+  COMPOSE_UPLOAD_CHANGE_SUCCESS,
+  COMPOSE_UPLOAD_FAIL,
+  COMPOSE_UPLOAD_PROCESSING,
+  COMPOSE_UPLOAD_PROGRESS,
+  COMPOSE_UPLOAD_REQUEST,
+  COMPOSE_UPLOAD_SUCCESS,
+  COMPOSE_UPLOAD_UNDO,
+  COMPOSE_VISIBILITY_CHANGE,
+  INIT_MEDIA_EDIT_MODAL,
+  THUMBNAIL_UPLOAD_FAIL,
+  THUMBNAIL_UPLOAD_PROGRESS,
+  THUMBNAIL_UPLOAD_REQUEST,
+  THUMBNAIL_UPLOAD_SUCCESS,
 } from '../actions/compose';
 import { TIMELINE_DELETE } from '../actions/timelines';
 import { STORE_HYDRATE } from '../actions/store';
 import { REDRAFT } from '../actions/statuses';
-import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
+import { fromJS, List as ImmutableList, Map as ImmutableMap, OrderedSet as ImmutableOrderedSet } from 'immutable';
 import uuid from '../uuid';
 import { me } from '../initial_state';
 import { unescapeHTML } from '../utils/html';
 
 const initialState = ImmutableMap({
   mounted: 0,
-  visible: false,
   sensitive: false,
   spoiler: false,
   spoiler_text: '',
@@ -69,6 +67,7 @@ const initialState = ImmutableMap({
   caretPosition: null,
   preselectDate: null,
   in_reply_to: null,
+  is_composing: false,
   is_submitting: false,
   is_changing_upload: false,
   is_uploading: false,
@@ -285,11 +284,9 @@ export default function compose(state = initialState, action) {
   case COMPOSE_MOUNT:
     return state.set('mounted', state.get('mounted') + 1);
   case COMPOSE_UNMOUNT:
-    return state.set('mounted', Math.max(state.get('mounted') - 1, 0));
-  case COMPOSE_SHOW:
-    return state.set('visible', true);
-  case COMPOSE_HIDE:
-    return state.set('visible', false);
+    return state
+      .set('mounted', Math.max(state.get('mounted') - 1, 0))
+      .set('is_composing', false);
   case COMPOSE_SENSITIVITY_CHANGE:
     return state.withMutations(map => {
       if (!state.get('spoiler')) {
@@ -320,6 +317,8 @@ export default function compose(state = initialState, action) {
     return state
       .set('text', action.text)
       .set('idempotencyKey', uuid());
+  case COMPOSE_COMPOSING_CHANGE:
+    return state.set('is_composing', action.value);
   case COMPOSE_REPLY:
     return state.withMutations(map => {
       map.set('id', null);

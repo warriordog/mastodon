@@ -49,9 +49,7 @@ export default class Button extends React.PureComponent {
         title={this.props.title}
         type={this.props.type}
       >
-        <span className='button-content'>
-          {this.props.text || this.props.children}
-        </span>
+        {this.props.text || this.props.children}
       </button>
     );
   }
