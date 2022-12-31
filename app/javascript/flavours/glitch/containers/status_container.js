@@ -67,7 +67,7 @@ const makeMapStateToProps = () => {
     }
 
     const settings = state.get('local_settings');
-    const useLocalLinks = settings.get('use_local_links');
+    const useLocalLinks = props.useLocalLinks || settings.get('use_local_links');
 
     return {
       containerId: props.containerId || props.id,  //  Should match reblogStatus's id for reblogs

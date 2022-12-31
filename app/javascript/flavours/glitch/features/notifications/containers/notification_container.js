@@ -9,10 +9,15 @@ import { mentionCompose } from 'flavours/glitch/actions/compose';
 const makeMapStateToProps = () => {
   const getNotification = makeGetNotification();
 
-  const mapStateToProps = (state, props) => ({
-    notification: getNotification(state, props.notification, props.accountId),
-    notifCleaning: state.getIn(['notifications', 'cleaningMode']),
-  });
+  const mapStateToProps = (state, props) => {
+    const settings = state.get('local_settings');
+    const useLocalLinks = props.useLocalLinks || settings.get('use_local_links');
+    return ({
+      notification: getNotification(state, props.notification, props.accountId),
+      notifCleaning: state.getIn(['notifications', 'cleaningMode']),
+      useLocalLinks,
+    });
+  };
 
   return mapStateToProps;
 };

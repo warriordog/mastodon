@@ -25,6 +25,7 @@ export default class Notification extends ImmutablePureComponent {
     cachedMediaWidth: PropTypes.number,
     onUnmount: PropTypes.func,
     unread: PropTypes.bool,
+    useLocalLinks: PropTypes.bool,
   };
 
   render () {
@@ -36,6 +37,7 @@ export default class Notification extends ImmutablePureComponent {
       onMention,
       getScrollPosition,
       updateScrollBottom,
+      useLocalLinks,
     } = this.props;
 
     switch(notification.get('type')) {
@@ -50,6 +52,7 @@ export default class Notification extends ImmutablePureComponent {
           onMoveUp={onMoveUp}
           onMention={onMention}
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'follow_request':
@@ -63,6 +66,7 @@ export default class Notification extends ImmutablePureComponent {
           onMoveUp={onMoveUp}
           onMention={onMention}
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'admin.sign_up':
@@ -76,6 +80,7 @@ export default class Notification extends ImmutablePureComponent {
           onMoveUp={onMoveUp}
           onMention={onMention}
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'admin.report':
@@ -89,6 +94,7 @@ export default class Notification extends ImmutablePureComponent {
           onMoveUp={onMoveUp}
           onMention={onMention}
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'mention':
@@ -109,6 +115,7 @@ export default class Notification extends ImmutablePureComponent {
           onUnmount={this.props.onUnmount}
           withDismiss
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'status':
@@ -131,6 +138,7 @@ export default class Notification extends ImmutablePureComponent {
           onUnmount={this.props.onUnmount}
           withDismiss
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'favourite':
@@ -153,6 +161,7 @@ export default class Notification extends ImmutablePureComponent {
           onUnmount={this.props.onUnmount}
           withDismiss
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'reblog':
@@ -175,6 +184,7 @@ export default class Notification extends ImmutablePureComponent {
           onUnmount={this.props.onUnmount}
           withDismiss
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'poll':
@@ -197,6 +207,7 @@ export default class Notification extends ImmutablePureComponent {
           onUnmount={this.props.onUnmount}
           withDismiss
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     case 'update':
@@ -219,6 +230,7 @@ export default class Notification extends ImmutablePureComponent {
           onUnmount={this.props.onUnmount}
           withDismiss
           unread={this.props.unread}
+          useLocalLinks={useLocalLinks}
         />
       );
     default:

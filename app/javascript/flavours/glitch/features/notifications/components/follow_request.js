@@ -5,7 +5,7 @@ import Avatar from 'flavours/glitch/components/avatar';
 import DisplayName from 'flavours/glitch/components/display_name';
 import Permalink from 'flavours/glitch/components/permalink';
 import IconButton from 'flavours/glitch/components/icon_button';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import NotificationOverlayContainer from '../containers/overlay_container';
 import { HotKeys } from 'react-hotkeys';
@@ -27,6 +27,7 @@ class FollowRequest extends ImmutablePureComponent {
     intl: PropTypes.object.isRequired,
     notification: ImmutablePropTypes.map.isRequired,
     unread: PropTypes.bool,
+    useLocalLinks: PropTypes.bool,
   };
 
   handleMoveUp = () => {
@@ -67,7 +68,7 @@ class FollowRequest extends ImmutablePureComponent {
   }
 
   render () {
-    const { intl, hidden, account, onAuthorize, onReject, notification, unread } = this.props;
+    const { intl, hidden, account, onAuthorize, onReject, notification, unread, useLocalLinks } = this.props;
 
     if (!account) {
       return <div />;
@@ -84,10 +85,11 @@ class FollowRequest extends ImmutablePureComponent {
 
     //  Links to the display name.
     const displayName = account.get('display_name_html') || account.get('username');
+    const accountUrl = useLocalLinks ? `/@${account.get('acct')}}` : account.get('url');
     const link = (
       <bdi><Permalink
         className='notification__display-name'
-        href={account.get('url')}
+        href={accountUrl}
         title={account.get('acct')}
         to={`/@${account.get('acct')}`}
         dangerouslySetInnerHTML={{ __html: displayName }}
@@ -111,7 +113,7 @@ class FollowRequest extends ImmutablePureComponent {
 
           <div className='account'>
             <div className='account__wrapper'>
-              <Permalink key={account.get('id')} className='account__display-name' title={account.get('acct')} href={account.get('url')} to={`/@${account.get('acct')}`}>
+              <Permalink key={account.get('id')} className='account__display-name' title={account.get('acct')} href={accountUrl} to={`/@${account.get('acct')}`}>
                 <div className='account__avatar-wrapper'><Avatar account={account} size={36} /></div>
                 <DisplayName account={account} />
               </Permalink>

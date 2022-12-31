@@ -21,6 +21,7 @@ export default class NotificationFollow extends ImmutablePureComponent {
     account: ImmutablePropTypes.map.isRequired,
     notification: ImmutablePropTypes.map.isRequired,
     unread: PropTypes.bool,
+    useLocalLinks: PropTypes.bool,
   };
 
   handleMoveUp = () => {
@@ -61,14 +62,15 @@ export default class NotificationFollow extends ImmutablePureComponent {
   }
 
   render () {
-    const { account, notification, hidden, unread } = this.props;
+    const { account, notification, hidden, unread, useLocalLinks } = this.props;
+    const accountUrl = useLocalLinks ? `/@${account.get('acct')}}` : account.get('url');
 
     //  Links to the display name.
     const displayName = account.get('display_name_html') || account.get('username');
     const link = (
       <bdi><Permalink
         className='notification__display-name'
-        href={account.get('url')}
+        href={accountUrl}
         title={account.get('acct')}
         to={`/@${account.get('acct')}`}
         dangerouslySetInnerHTML={{ __html: displayName }}

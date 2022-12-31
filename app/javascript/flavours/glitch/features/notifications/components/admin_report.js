@@ -2,14 +2,13 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { HotKeys } from 'react-hotkeys';
 import classNames from 'classnames';
 
 // Our imports.
 import Permalink from 'flavours/glitch/components/permalink';
-import AccountContainer from 'flavours/glitch/containers/account_container';
 import NotificationOverlayContainer from '../containers/overlay_container';
 import Icon from 'flavours/glitch/components/icon';
 import Report from './report';
@@ -27,6 +26,7 @@ export default class AdminReport extends ImmutablePureComponent {
     notification: ImmutablePropTypes.map.isRequired,
     unread: PropTypes.bool,
     report: ImmutablePropTypes.map.isRequired,
+    useLocalLinks: PropTypes.bool,
   };
 
   handleMoveUp = () => {
@@ -67,7 +67,7 @@ export default class AdminReport extends ImmutablePureComponent {
   }
 
   render () {
-    const { intl, account, notification, unread, report } = this.props;
+    const { intl, account, notification, unread, report, useLocalLinks } = this.props;
 
     if (!report) {
       return null;
@@ -75,10 +75,11 @@ export default class AdminReport extends ImmutablePureComponent {
 
     //  Links to the display name.
     const displayName = account.get('display_name_html') || account.get('username');
+    const accountUrl = useLocalLinks ? `/@${account.get('acct')}}` : account.get('url');
     const link = (
       <bdi><Permalink
         className='notification__display-name'
-        href={account.get('url')}
+        href={accountUrl}
         title={account.get('acct')}
         to={`/@${account.get('acct')}`}
         dangerouslySetInnerHTML={{ __html: displayName }}
@@ -86,8 +87,9 @@ export default class AdminReport extends ImmutablePureComponent {
     );
 
     const targetAccount = report.get('target_account');
+    const targetAccountUrl = useLocalLinks ? `/@${targetAccount.get('acct')}}` : targetAccount.get('url');
     const targetDisplayNameHtml = { __html: targetAccount.get('display_name_html') };
-    const targetLink = <bdi><Permalink className='notification__display-name' href={targetAccount.get('url')} title={targetAccount.get('acct')} to={`/@${targetAccount.get('acct')}`} dangerouslySetInnerHTML={targetDisplayNameHtml} /></bdi>;
+    const targetLink = <bdi><Permalink className='notification__display-name' href={targetAccountUrl} title={targetAccount.get('acct')} to={`/@${targetAccount.get('acct')}`} dangerouslySetInnerHTML={targetDisplayNameHtml} /></bdi>;
 
     return (
       <HotKeys handlers={this.getHandlers()}>
