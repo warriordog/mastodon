@@ -5,7 +5,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 //  Our imports
-import { expandSpoilers, disableSwiping } from 'flavours/glitch/initial_state';
+import { expandSpoilers } from 'flavours/glitch/initial_state';
 import { preferenceLink } from 'flavours/glitch/utils/backend_links';
 import LocalSettingsPageItem from './item';
 import DeprecatedLocalSettingsPageItem from './deprecated_item';
@@ -78,6 +78,15 @@ class LocalSettingsPage extends React.PureComponent {
         >
           <FormattedMessage id='settings.tag_misleading_links' defaultMessage='Tag misleading links' />
           <span className='hint'><FormattedMessage id='settings.tag_misleading_links.hint' defaultMessage="Add a visual indication with the link target host to every link not mentioning it explicitly" /></span>
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['use_local_links']}
+          id={'mastodon-settings--use_local_links'}
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.use_local_links' defaultMessage='Use local links' />
+          <span className='hint'><FormattedMessage id='settings.use_local_links.hint' defaultMessage="Open remote posts and profiles through this instance's view" /></span>
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}

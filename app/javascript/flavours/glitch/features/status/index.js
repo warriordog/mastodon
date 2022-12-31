@@ -133,16 +133,19 @@ const makeMapStateToProps = () => {
       descendantsIds = getDescendantsIds(state, { id: status.get('id') });
     }
 
+    const settings = state.get('local_settings');
+    const useLocalLinks = props.useLocalLinks || settings.get('use_local_links');
+
     return {
       isLoading: state.getIn(['statuses', props.params.statusId, 'isLoading']),
       status,
       ancestorsIds,
       descendantsIds,
-      settings: state.get('local_settings'),
+      settings,
       askReplyConfirmation: state.getIn(['local_settings', 'confirm_before_clearing_draft']) && state.getIn(['compose', 'text']).trim().length !== 0,
       domain: state.getIn(['meta', 'domain']),
       usingPiP: state.get('picture_in_picture').statusId === props.params.statusId,
-      useLocalLinks: true, // TODO get from settings
+      useLocalLinks,
     };
   };
 

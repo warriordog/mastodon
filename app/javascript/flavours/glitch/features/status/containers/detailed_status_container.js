@@ -25,12 +25,17 @@ const messages = defineMessages({
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
 
-  const mapStateToProps = (state, props) => ({
-    status: getStatus(state, props),
-    domain: state.getIn(['meta', 'domain']),
-    settings: state.get('local_settings'),
-    useLocalLinks: true, // TODO get from settings
-  });
+  const mapStateToProps = (state, props) => {
+    const settings = state.get('local_settings');
+    const useLocalLinks = props.useLocalLinks || settings.get('use_local_links');
+
+    return ({
+      status: getStatus(state, props),
+      domain: state.getIn(['meta', 'domain']),
+      settings,
+      useLocalLinks,
+    });
+  };
 
   return mapStateToProps;
 };

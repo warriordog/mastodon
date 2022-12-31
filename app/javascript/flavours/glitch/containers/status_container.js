@@ -66,14 +66,14 @@ const makeMapStateToProps = () => {
       prepend = 'reblogged_by';
     }
 
-    // TODO read from settings
-    const useLocalLinks = true;
+    const settings = state.get('local_settings');
+    const useLocalLinks = settings.get('use_local_links');
 
     return {
       containerId: props.containerId || props.id,  //  Should match reblogStatus's id for reblogs
       status: status,
       account: account || props.account,
-      settings: state.get('local_settings'),
+      settings,
       prepend: prepend || props.prepend,
       useLocalLinks: props.useLocalLinks || useLocalLinks,
 

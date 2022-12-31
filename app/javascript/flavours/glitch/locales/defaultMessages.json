@@ -611,6 +611,14 @@
         "id": "settings.tag_misleading_links"
       },
       {
+        "defaultMessage": "Use local links",
+        "id": "settings.use_local_links"
+      },
+      {
+        "defaultMessage": "Open remote posts and profiles through this instance's view",
+        "id": "settings.use_local_links.hint"
+      },
+      {
         "defaultMessage": "Add a visual indication with the link target host to every link not mentioning it explicitly",
         "id": "settings.tag_misleading_links.hint"
       },

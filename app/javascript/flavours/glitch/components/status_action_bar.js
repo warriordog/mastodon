@@ -86,6 +86,7 @@ class StatusActionBar extends ImmutablePureComponent {
     'showReplyCount',
     'withCounters',
     'withDismiss',
+    'useLocalLinks',
   ]
 
   handleReplyClick = () => {

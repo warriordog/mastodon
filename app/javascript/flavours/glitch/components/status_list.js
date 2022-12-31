@@ -27,6 +27,7 @@ export default class StatusList extends ImmutablePureComponent {
     withCounters: PropTypes.bool,
     timelineId: PropTypes.string.isRequired,
     regex: PropTypes.string,
+    useLocalLinks: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -78,7 +79,7 @@ export default class StatusList extends ImmutablePureComponent {
   }
 
   render () {
-    const { statusIds, featuredStatusIds, onLoadMore, timelineId, ...other }  = this.props;
+    const { statusIds, featuredStatusIds, onLoadMore, timelineId, useLocalLinks, ...other }  = this.props;
     const { isLoading, isPartial } = other;
 
     if (isPartial) {
@@ -102,6 +103,7 @@ export default class StatusList extends ImmutablePureComponent {
           contextType={timelineId}
           scrollKey={this.props.scrollKey}
           withCounters={this.props.withCounters}
+          useLocalLinks={useLocalLinks}
         />
       ))
     ) : null;
@@ -117,6 +119,7 @@ export default class StatusList extends ImmutablePureComponent {
           contextType={timelineId}
           scrollKey={this.props.scrollKey}
           withCounters={this.props.withCounters}
+          useLocalLinks={useLocalLinks}
         />
       )).concat(scrollableContent);
     }

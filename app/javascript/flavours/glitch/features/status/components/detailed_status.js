@@ -321,6 +321,7 @@ class DetailedStatus extends ImmutablePureComponent {
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
             disabled
+            useLocalLinks={useLocalLinks}
           />
 
           <div className='detailed-status__meta'>

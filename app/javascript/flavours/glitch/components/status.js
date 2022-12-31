@@ -8,9 +8,9 @@ import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
 import AttachmentList from './attachment_list';
 import Card from '../features/status/components/card';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { MediaGallery, Video, Audio } from '../features/ui/util/async-components';
+import { Audio, MediaGallery, Video } from '../features/ui/util/async-components';
 import { HotKeys } from 'react-hotkeys';
 import NotificationOverlayContainer from 'flavours/glitch/features/notifications/containers/overlay_container';
 import classNames from 'classnames';
@@ -133,6 +133,7 @@ class Status extends ImmutablePureComponent {
     'expanded',
     'unread',
     'pictureInPicture',
+    'useLocalLinks',
   ]
 
   updateOnStates = [

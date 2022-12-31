@@ -879,11 +879,11 @@ ActiveRecord::Schema.define(version: 2022_12_06_114142) do
     t.text "spoiler_text", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "content_type"
     t.bigint "ordered_media_attachment_ids", array: true
     t.text "media_descriptions", array: true
     t.string "poll_options", array: true
     t.boolean "sensitive"
+    t.string "content_type"
     t.index ["account_id"], name: "index_status_edits_on_account_id"
     t.index ["status_id"], name: "index_status_edits_on_status_id"
   end
@@ -936,13 +936,13 @@ ActiveRecord::Schema.define(version: 2022_12_06_114142) do
     t.bigint "account_id", null: false
     t.bigint "application_id"
     t.bigint "in_reply_to_account_id"
-    t.boolean "local_only"
     t.bigint "poll_id"
-    t.string "content_type"
     t.datetime "deleted_at"
     t.datetime "edited_at"
     t.boolean "trendable"
     t.bigint "ordered_media_attachment_ids", array: true
+    t.boolean "local_only"
+    t.string "content_type"
     t.index ["account_id", "id", "visibility", "updated_at"], name: "index_statuses_20190820", order: { id: :desc }, where: "(deleted_at IS NULL)"
     t.index ["account_id"], name: "index_statuses_on_account_id"
     t.index ["deleted_at"], name: "index_statuses_on_deleted_at", where: "(deleted_at IS NOT NULL)"
