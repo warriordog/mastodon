@@ -63,7 +63,7 @@ export default class NotificationFollow extends ImmutablePureComponent {
 
   render () {
     const { account, notification, hidden, unread, useLocalLinks } = this.props;
-    const accountUrl = useLocalLinks ? `/@${account.get('acct')}}` : account.get('url');
+    const accountUrl = useLocalLinks ? `/@${account.get('acct')}` : account.get('url');
 
     //  Links to the display name.
     const displayName = account.get('display_name_html') || account.get('username');

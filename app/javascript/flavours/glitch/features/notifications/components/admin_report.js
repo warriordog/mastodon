@@ -75,7 +75,7 @@ export default class AdminReport extends ImmutablePureComponent {
 
     //  Links to the display name.
     const displayName = account.get('display_name_html') || account.get('username');
-    const accountUrl = useLocalLinks ? `/@${account.get('acct')}}` : account.get('url');
+    const accountUrl = useLocalLinks ? `/@${account.get('acct')}` : account.get('url');
     const link = (
       <bdi><Permalink
         className='notification__display-name'
