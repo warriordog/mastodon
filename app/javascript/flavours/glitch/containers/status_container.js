@@ -1,28 +1,35 @@
 import { connect } from 'react-redux';
 import Status from 'flavours/glitch/components/status';
-import { makeGetStatus } from 'flavours/glitch/selectors';
-import { directCompose, mentionCompose, replyCompose } from 'flavours/glitch/actions/compose';
+import { List as ImmutableList } from 'immutable';
+import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
 import {
-  bookmark,
-  favourite,
-  pin,
+  replyCompose,
+  mentionCompose,
+  directCompose,
+} from 'flavours/glitch/actions/compose';
+import {
   reblog,
-  unbookmark,
-  unfavourite,
-  unpin,
+  favourite,
+  bookmark,
   unreblog,
+  unfavourite,
+  unbookmark,
+  pin,
+  unpin,
 } from 'flavours/glitch/actions/interactions';
 import {
-  deleteStatus,
-  editStatus,
-  hideStatus,
   muteStatus,
+  unmuteStatus,
+  deleteStatus,
+  hideStatus,
   revealStatus,
+  editStatus,
   translateStatus,
   undoStatusTranslation,
-  unmuteStatus,
 } from 'flavours/glitch/actions/statuses';
-import { initAddFilter } from 'flavours/glitch/actions/filters';
+import {
+  initAddFilter,
+} from 'flavours/glitch/actions/filters';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
@@ -30,9 +37,13 @@ import { initBoostModal } from 'flavours/glitch/actions/boosts';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { deployPictureInPicture } from 'flavours/glitch/actions/picture_in_picture';
 import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
-import { defineMessages, injectIntl } from 'react-intl';
-import { boostModal, deleteModal, favouriteModal } from 'flavours/glitch/initial_state';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/initial_state';
+import { filterEditLink } from 'flavours/glitch/utils/backend_links';
 import { showAlertForError } from '../actions/alerts';
+import AccountContainer from 'flavours/glitch/containers/account_container';
+import Spoilers from '../components/spoilers';
+import Icon from 'flavours/glitch/components/icon';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -49,6 +60,7 @@ const messages = defineMessages({
 
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
+  const getPictureInPicture = makeGetPictureInPicture();
 
   const mapStateToProps = (state, props) => {
 
@@ -76,11 +88,7 @@ const makeMapStateToProps = () => {
       settings,
       prepend: prepend || props.prepend,
       useLocalLinks: props.useLocalLinks || useLocalLinks,
-
-      pictureInPicture: {
-        inUse: state.getIn(['meta', 'layout']) !== 'mobile' && state.get('picture_in_picture').statusId === props.id,
-        available: state.getIn(['meta', 'layout']) !== 'mobile',
-      },
+      pictureInPicture: getPictureInPicture(state, props),
     };
   };
 

@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { domain, profile_directory as profileDirectory, source_url, version } from 'flavours/glitch/initial_state';
+import { domain, version, source_url, profile_directory as profileDirectory } from 'flavours/glitch/initial_state';
 import { logOut } from 'flavours/glitch/utils/log_out';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { PERMISSION_INVITE_USERS } from 'flavours/glitch/permissions';
@@ -52,6 +52,8 @@ class LinkFooter extends React.PureComponent {
     const canInvite = signedIn && ((permissions & PERMISSION_INVITE_USERS) === PERMISSION_INVITE_USERS);
     const canProfileDirectory = profileDirectory;
 
+    const DividingCircle = <span aria-hidden>{' · '}</span>;
+
     return (
       <div className='link-footer'>
         <p>
@@ -60,17 +62,17 @@ class LinkFooter extends React.PureComponent {
           <Link key='about' to='/about'><FormattedMessage id='footer.about' defaultMessage='About' /></Link>
           {canInvite && (
             <>
-              {' · '}
+              {DividingCircle}
               <a key='invites' href='/invites' target='_blank'><FormattedMessage id='footer.invite' defaultMessage='Invite people' /></a>
             </>
           )}
           {canProfileDirectory && (
             <>
-              {' · '}
+              {DividingCircle}
               <Link key='directory' to='/directory'><FormattedMessage id='footer.directory' defaultMessage='Profiles directory' /></Link>
             </>
           )}
-          {' · '}
+          {DividingCircle}
           <Link key='privacy-policy' to='/privacy-policy'><FormattedMessage id='footer.privacy_policy' defaultMessage='Privacy policy' /></Link>
         </p>
 
@@ -78,11 +80,11 @@ class LinkFooter extends React.PureComponent {
           <strong>Mastodon</strong>:
           {' '}
           <a href='https://joinmastodon.org' target='_blank'><FormattedMessage id='footer.about' defaultMessage='About' /></a>
-          {' · '}
+          {DividingCircle}
           <Link to='/keyboard-shortcuts'><FormattedMessage id='footer.keyboard_shortcuts' defaultMessage='Keyboard shortcuts' /></Link>
-          {' · '}
+          {DividingCircle}
           <a href={source_url} rel='noopener noreferrer' target='_blank'><FormattedMessage id='footer.source_code' defaultMessage='View source code' /></a>
-          {' · '}
+          {DividingCircle}
           v{version}
         </p>
       </div>

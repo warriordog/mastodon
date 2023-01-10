@@ -5,39 +5,43 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { createSelector } from 'reselect';
-import {
-  deleteStatus,
-  editStatus,
-  fetchStatus,
-  hideStatus,
-  muteStatus,
-  revealStatus,
-  translateStatus,
-  undoStatusTranslation,
-  unmuteStatus,
-} from 'flavours/glitch/actions/statuses';
+import { fetchStatus } from 'flavours/glitch/actions/statuses';
 import MissingIndicator from 'flavours/glitch/components/missing_indicator';
 import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
 import DetailedStatus from './components/detailed_status';
 import ActionBar from './components/action_bar';
 import Column from 'flavours/glitch/features/ui/components/column';
 import {
-  bookmark,
   favourite,
-  pin,
-  reblog,
-  unbookmark,
   unfavourite,
-  unpin,
+  bookmark,
+  unbookmark,
+  reblog,
   unreblog,
+  pin,
+  unpin,
 } from 'flavours/glitch/actions/interactions';
-import { directCompose, mentionCompose, replyCompose } from 'flavours/glitch/actions/compose';
+import {
+  replyCompose,
+  mentionCompose,
+  directCompose,
+} from 'flavours/glitch/actions/compose';
 import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
+import {
+  muteStatus,
+  unmuteStatus,
+  deleteStatus,
+  editStatus,
+  hideStatus,
+  revealStatus,
+  translateStatus,
+  undoStatusTranslation,
+} from 'flavours/glitch/actions/statuses';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
 import { initBoostModal } from 'flavours/glitch/actions/boosts';
-import { makeGetStatus } from 'flavours/glitch/selectors';
+import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
 import ScrollContainer from 'flavours/glitch/containers/scroll_container';
 import ColumnBackButton from 'flavours/glitch/components/column_back_button';
 import ColumnHeader from '../../components/column_header';
@@ -46,10 +50,10 @@ import { openModal } from 'flavours/glitch/actions/modal';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { HotKeys } from 'react-hotkeys';
-import { boostModal, deleteModal, favouriteModal } from 'flavours/glitch/initial_state';
+import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/initial_state';
 import { attachFullscreenListener, detachFullscreenListener, isFullscreen } from '../ui/util/fullscreen';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
-import { defaultMediaVisibility, textForScreenReader } from 'flavours/glitch/components/status';
+import { textForScreenReader, defaultMediaVisibility } from 'flavours/glitch/components/status';
 import Icon from 'flavours/glitch/components/icon';
 import { Helmet } from 'react-helmet';
 
@@ -68,6 +72,7 @@ const messages = defineMessages({
 
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
+  const getPictureInPicture = makeGetPictureInPicture();
 
   const getAncestorsIds = createSelector([
     (_, { id }) => id,
@@ -125,6 +130,7 @@ const makeMapStateToProps = () => {
 
   const mapStateToProps = (state, props) => {
     const status = getStatus(state, { id: props.params.statusId });
+
     let ancestorsIds = Immutable.List();
     let descendantsIds = Immutable.List();
 
@@ -144,7 +150,7 @@ const makeMapStateToProps = () => {
       settings,
       askReplyConfirmation: state.getIn(['local_settings', 'confirm_before_clearing_draft']) && state.getIn(['compose', 'text']).trim().length !== 0,
       domain: state.getIn(['meta', 'domain']),
-      usingPiP: state.get('picture_in_picture').statusId === props.params.statusId,
+      pictureInPicture: getPictureInPicture(state, { id: props.params.statusId }),
       useLocalLinks,
     };
   };
@@ -190,7 +196,10 @@ class Status extends ImmutablePureComponent {
     askReplyConfirmation: PropTypes.bool,
     multiColumn: PropTypes.bool,
     domain: PropTypes.string.isRequired,
-    usingPiP: PropTypes.bool,
+    pictureInPicture: ImmutablePropTypes.contains({
+      inUse: PropTypes.bool,
+      available: PropTypes.bool,
+    }),
     useLocalLinks: PropTypes.bool,
   };
 
@@ -605,7 +614,7 @@ class Status extends ImmutablePureComponent {
 
   render () {
     let ancestors, descendants;
-    const { isLoading, status, settings, ancestorsIds, descendantsIds, intl, domain, multiColumn, usingPiP, useLocalLinks } = this.props;
+    const { isLoading, status, settings, ancestorsIds, descendantsIds, intl, domain, multiColumn, pictureInPicture, useLocalLinks } = this.props;
     const { fullscreen } = this.state;
 
     if (isLoading) {
@@ -683,7 +692,7 @@ class Status extends ImmutablePureComponent {
                   domain={domain}
                   showMedia={this.state.showMedia}
                   onToggleMediaVisibility={this.handleToggleMediaVisibility}
-                  usingPiP={usingPiP}
+                  pictureInPicture={pictureInPicture}
                   useLocalLinks={useLocalLinks}
                 />
 
