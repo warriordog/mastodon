@@ -10,51 +10,52 @@ import LoadingBarContainer from './containers/loading_bar_container';
 import ModalContainer from './containers/modal_container';
 import { layoutFromWindow } from 'mastodon/is_mobile';
 import { debounce } from 'lodash';
-import { changeComposeSpoilerness, resetCompose, uploadCompose } from '../../actions/compose';
+import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
 import { expandHomeTimeline } from '../../actions/timelines';
 import { expandNotifications } from '../../actions/notifications';
 import { fetchServer } from '../../actions/server';
 import { clearHeight } from '../../actions/height_cache';
-import { changeLayout, focusApp, unfocusApp } from 'mastodon/actions/app';
-import { fetchMarkers, submitMarkers, synchronouslySubmitMarkers } from 'mastodon/actions/markers';
-import { WrappedRoute, WrappedSwitch } from './util/react_router_helpers';
+import { focusApp, unfocusApp, changeLayout } from 'mastodon/actions/app';
+import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'mastodon/actions/markers';
+import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
 import BundleColumnError from './components/bundle_column_error';
 import UploadArea from './components/upload_area';
 import ColumnsAreaContainer from './containers/columns_area_container';
 import PictureInPicture from 'mastodon/features/picture_in_picture';
 import {
-  About,
-  AccountGallery,
-  AccountTimeline,
-  Blocks,
-  BookmarkedStatuses,
-  CommunityTimeline,
   Compose,
-  Directory,
-  DirectTimeline,
-  DomainBlocks,
-  Explore,
-  FavouritedStatuses,
-  Favourites,
+  Status,
+  GettingStarted,
+  KeyboardShortcuts,
+  PublicTimeline,
+  CommunityTimeline,
+  AccountTimeline,
+  AccountGallery,
+  HomeTimeline,
   Followers,
   Following,
-  FollowRecommendations,
-  FollowRequests,
-  GettingStarted,
-  HashtagTimeline,
-  HomeTimeline,
-  KeyboardShortcuts,
-  Lists,
-  ListTimeline,
-  Mutes,
-  Notifications,
-  PinnedStatuses,
-  PrivacyPolicy,
-  PublicTimeline,
   Reblogs,
-  Status,
+  Favourites,
+  DirectTimeline,
+  HashtagTimeline,
+  Notifications,
+  FollowRequests,
+  FavouritedStatuses,
+  BookmarkedStatuses,
+  FollowedTags,
+  ListTimeline,
+  Blocks,
+  DomainBlocks,
+  Mutes,
+  PinnedStatuses,
+  Lists,
+  Directory,
+  Explore,
+  FollowRecommendations,
+  About,
+  PrivacyPolicy,
 } from './util/async-components';
-import initialState, { me, owner, showTrends, singleUserMode } from '../../initial_state';
+import initialState, { me, owner, singleUserMode, showTrends, trendsAsLanding } from '../../initial_state';
 import { closeOnboarding, INTRODUCTION_VERSION } from 'mastodon/actions/onboarding';
 import Header from './components/header';
 
@@ -163,7 +164,7 @@ class SwitchingColumnsArea extends React.PureComponent {
       }
     } else if (singleUserMode && owner && initialState?.accounts[owner]) {
       redirect = <Redirect from='/' to={`/@${initialState.accounts[owner].username}`} exact />;
-    } else if (showTrends) {
+    } else if (showTrends && trendsAsLanding) {
       redirect = <Redirect from='/' to='/explore' exact />;
     } else {
       redirect = <Redirect from='/' to='/about' exact />;
@@ -216,6 +217,7 @@ class SwitchingColumnsArea extends React.PureComponent {
           <WrappedRoute path='/follow_requests' component={FollowRequests} content={children} />
           <WrappedRoute path='/blocks' component={Blocks} content={children} />
           <WrappedRoute path='/domain_blocks' component={DomainBlocks} content={children} />
+          <WrappedRoute path='/followed_tags' component={FollowedTags} content={children} />
           <WrappedRoute path='/mutes' component={Mutes} content={children} />
           <WrappedRoute path='/lists' component={Lists} content={children} />
 
