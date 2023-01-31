@@ -415,6 +415,18 @@ class LocalSettingsPage extends React.PureComponent {
           >
             <FormattedMessage id='settings.auto_collapse_media' defaultMessage='Toots with media' />
           </LocalSettingsPageItem>
+          <LocalSettingsPageItem
+            settings={settings}
+            item={['collapsed', 'auto', 'height']}
+            id='mastodon-settings--collapsed-auto-height'
+            placeholder='400'
+            onChange={onChange}
+            dependsOn={[['collapsed', 'enabled']]}
+            dependsOnNot={[['collapsed', 'auto', 'all']]}
+            inputProps={{type: 'number', min: '200', max: '999'}}
+          >
+            <FormattedMessage id='settings.auto_collapse_height' defaultMessage='Height (in pixels) for a toot to be considered lengthy' />
+          </LocalSettingsPageItem>
         </section>
         <section>
           <h2><FormattedMessage id='settings.image_backgrounds' defaultMessage='Image backgrounds' /></h2>
