@@ -1,9 +1,11 @@
 #!/bin/bash
 
+export RAILS_ENV=test
+
 # Compile assets to fix test errors
 # https://stackoverflow.com/questions/52639256/webpackermanifestmissingentryerror
-export RAILS_ENV=test
-bundle exec rake assets:precompile
+bundle exec rails assets:precompile
+bin/tootctl cache clear
 
 # Run tests
 rspec
