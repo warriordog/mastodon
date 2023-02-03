@@ -1150,6 +1150,8 @@ en:
       notifications: Notifications
       public: Public timelines
       thread: Conversations
+      home_feed: Home feed
+      lists: Lists
     edit:
       add_keyword: Add keyword
       keywords: Keywords

@@ -5,6 +5,10 @@ class REST::FilterSerializer < ActiveModel::Serializer
   has_many :keywords, serializer: REST::FilterKeywordSerializer, if: :rules_requested?
   has_many :statuses, serializer: REST::FilterStatusSerializer, if: :rules_requested?
 
+  def context
+    CustomFilter.legacy_context(object.context)
+  end
+
   def id
     object.id.to_s
   end

@@ -19,13 +19,23 @@ class CustomFilter < ApplicationRecord
   alias_attribute :title, :phrase
   alias_attribute :filter_action, :action
 
-  VALID_CONTEXTS = %w(
-    home
+  # Contexts that are fully supported in the current application version
+  CURRENT_CONTEXTS = %w(
+    home_feed
+    lists
     notifications
     public
     thread
     account
   ).freeze
+
+  # Context values that are permitted to appear for compatibility purposes.
+  # Do not use these in new code - they may be converted or removed automatically.
+  LEGACY_CONTEXTS = %w(
+    home
+  ).freeze
+
+  VALID_CONTEXTS = (CURRENT_CONTEXTS + LEGACY_CONTEXTS).freeze
 
   include Expireable
   include Redisable
@@ -40,11 +50,12 @@ class CustomFilter < ApplicationRecord
   validates :title, :context, presence: true
   validate :context_must_be_valid
 
-  before_validation :clean_up_contexts
+  before_validation :clean_up_contexts!
 
   before_save :prepare_cache_invalidation!
   before_destroy :prepare_cache_invalidation!
   after_commit :invalidate_cache!
+  after_find :clean_up_contexts!
 
   def expires_in
     return @expires_in if defined?(@expires_in)
@@ -59,6 +70,20 @@ class CustomFilter < ApplicationRecord
 
   def irreversible?
     hide_action?
+  end
+
+  # Context with legacy values emulated from newer values
+  # @param [Array<string>] context
+  def self.legacy_context(context)
+    ctx = context.clone
+
+    # Include home (AKA "Home and lists") if either home_feed or lists is included.
+    # This enables backwards compatibility with clients that don't support the separate filter categories.
+    if (ctx.include? 'home_feed') || (ctx.include? 'lists')
+      ctx.append 'home'
+    end
+
+    ctx
   end
 
   def self.cached_filters_for(account_id)
@@ -120,8 +145,18 @@ class CustomFilter < ApplicationRecord
 
   private
 
-  def clean_up_contexts
-    self.context = Array(context).map(&:strip).filter_map(&:presence)
+  def clean_up_contexts!
+    ctx = Array(context).map(&:strip).filter_map(&:presence)
+
+    # Replace "home" with "home_feed" and "lists".
+    # This will convert legacy filters.
+    if ctx.include? 'home'
+      ctx.delete 'home'
+      ctx.append 'home_feed'
+      ctx.append 'lists'
+    end
+
+    self.context = ctx
   end
 
   def context_must_be_valid
