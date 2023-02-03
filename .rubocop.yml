@@ -477,3 +477,9 @@ RSpec/DescribeClass:
   Enabled: false
 RSpec/LetSetup:
   Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
