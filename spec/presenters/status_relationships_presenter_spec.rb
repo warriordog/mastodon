@@ -75,7 +75,7 @@ RSpec.describe StatusRelationshipsPresenter do
       let(:options) { {} }
 
       before do
-        Account.find(current_account_id).custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
+        Account.find(current_account_id).custom_filters.create!(phrase: 'filter1', context: %w(home_feed lists), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
       end
 
       it 'sets @filters_map to filter top-level status' do
@@ -100,7 +100,7 @@ RSpec.describe StatusRelationshipsPresenter do
       let(:options) { {} }
 
       before do
-        filter = Account.find(current_account_id).custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide)
+        filter = Account.find(current_account_id).custom_filters.create!(phrase: 'filter1', context: %w(home_feed lists), action: :hide)
         filter.statuses.create!(status_id: statuses[0].id)
         filter.statuses.create!(status_id: statuses[1].reblog_of_id)
       end

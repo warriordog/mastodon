@@ -22,9 +22,10 @@ RSpec.describe Api::V2::FiltersController, type: :controller do
 
   describe 'POST #create' do
     let(:scopes) { 'write:filters' }
+    let(:contexts) { %w(home_feed lists) }
 
     before do
-      post :create, params: { title: 'magic', context: %w(home), filter_action: 'hide', keywords_attributes: [keyword: 'magic'] }
+      post :create, params: { title: 'magic', context: contexts, filter_action: 'hide', keywords_attributes: [keyword: 'magic'] }
     end
 
     it 'returns http success' do
@@ -35,7 +36,7 @@ RSpec.describe Api::V2::FiltersController, type: :controller do
       json = body_as_json
       expect(json[:title]).to eq 'magic'
       expect(json[:filter_action]).to eq 'hide'
-      expect(json[:context]).to eq ['home']
+      expect(json[:context]).to eq %w(home_feed lists home)
       expect(json[:keywords].map { |keyword| keyword.slice(:keyword, :whole_word) }).to eq [{ keyword: 'magic', whole_word: true }]
     end
 
@@ -43,9 +44,27 @@ RSpec.describe Api::V2::FiltersController, type: :controller do
       filter = user.account.custom_filters.first
       expect(filter).to_not be_nil
       expect(filter.keywords.pluck(:keyword)).to eq ['magic']
-      expect(filter.context).to eq %w(home)
+      expect(filter.context).to eq %w(home_feed lists)
       expect(filter.irreversible?).to be true
       expect(filter.expires_at).to be_nil
+    end
+
+    context 'with legacy home context' do
+      let(:contexts) { %w(home) }
+
+      it 'returns http success' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns a filter with converted and legacy context' do
+        json = body_as_json
+        expect(json[:context]).to eq %w(home_feed lists home)
+      end
+
+      it 'creates a filter with converted context' do
+        filter = user.account.custom_filters.first
+        expect(filter.context).to eq %w(home_feed lists)
+      end
     end
   end
 
@@ -63,10 +82,11 @@ RSpec.describe Api::V2::FiltersController, type: :controller do
     let(:scopes)   { 'write:filters' }
     let!(:filter)  { Fabricate(:custom_filter, account: user.account) }
     let!(:keyword) { Fabricate(:custom_filter_keyword, custom_filter: filter) }
+    let(:contexts) { %w(home_feed lists public) }
 
     context 'updating filter parameters' do
       before do
-        put :update, params: { id: filter.id, title: 'updated', context: %w(home public) }
+        put :update, params: { id: filter.id, title: 'updated', context: contexts }
       end
 
       it 'returns http success' do
@@ -78,7 +98,7 @@ RSpec.describe Api::V2::FiltersController, type: :controller do
       end
 
       it 'updates the filter context' do
-        expect(filter.reload.context).to eq %w(home public)
+        expect(filter.reload.context).to eq %w(home_feed lists public)
       end
     end
 

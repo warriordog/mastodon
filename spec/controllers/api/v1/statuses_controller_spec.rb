@@ -25,7 +25,7 @@ RSpec.describe Api::V1::StatusesController, type: :controller do
         let(:status) { Fabricate(:status, text: 'this toot is about that banned word') }
 
         before do
-          user.account.custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
+          user.account.custom_filters.create!(phrase: 'filter1', context: %w(home_feed lists), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
         end
 
         it 'returns http success' do
@@ -51,7 +51,7 @@ RSpec.describe Api::V1::StatusesController, type: :controller do
         let(:status) { Fabricate(:status, text: 'hello world') }
 
         before do
-          filter = user.account.custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide)
+          filter = user.account.custom_filters.create!(phrase: 'filter1', context: %w(home_feed lists), action: :hide)
           filter.statuses.create!(status_id: status.id)
         end
 
@@ -78,7 +78,7 @@ RSpec.describe Api::V1::StatusesController, type: :controller do
         let(:status) { Fabricate(:status, reblog: Fabricate(:status, text: 'this toot is about that banned word')) }
 
         before do
-          user.account.custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
+          user.account.custom_filters.create!(phrase: 'filter1', context: %w(home_feed lists), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
         end
 
         it 'returns http success' do
