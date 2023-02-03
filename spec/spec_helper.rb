@@ -1,5 +1,24 @@
 GC.disable
 
+# Based on https://github.com/rspec/rspec-rails/issues/1353#issuecomment-93173691
+puts "[rspec] Stall diagnosis is available. Send signal USR1 to dump threads. Process ID: [#{Process.pid}]"
+trap 'USR1' do
+  threads = Thread.list
+
+  puts
+  puts '=' * 80
+  puts "[rspec] Received USR1 signal; printing all [#{threads.count}] thread backtrace(s)."
+
+  threads.each do |thr|
+    description = thr == Thread.main ? 'Main thread' : thr.inspect
+    puts
+    puts "Backtrace of [#{description}]: "
+    puts thr.backtrace.join("\n")
+  end
+
+  puts '=' * 80
+end
+
 if ENV['DISABLE_SIMPLECOV'] != 'true'
   require 'simplecov'
   SimpleCov.start 'rails' do
