@@ -7,7 +7,7 @@ class REST::V1::FilterSerializer < ActiveModel::Serializer
   delegate :expires_at, to: :custom_filter
 
   def context
-    CustomFilter.legacy_context(object.context)
+    CustomFilter.legacy_context(custom_filter.context)
   end
 
   def id
