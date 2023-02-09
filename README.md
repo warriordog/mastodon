@@ -15,4 +15,4 @@ Supported features and tweaks are listed below, and planned changes are listed o
 * Improved tooling for local development (particularly under a WSL environment)
 
 ## Installation
-Just follow standard [installation instructions for glitch-soc](https://glitch-soc.github.io/docs/).
+Follow standard [installation instructions for glitch-soc](https://glitch-soc.github.io/docs/).
