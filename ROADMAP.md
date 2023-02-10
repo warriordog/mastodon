@@ -15,6 +15,8 @@ No timeline is offered and plans may be changed or dropped at any time.
   * [ ] Filter by bookmarked - only include posts that were bookmarked by the current user
 * Fix missed cases of Use Local Links
   * [ ] Apply to mentions
+  * [ ] Apply to hashtags
+  * [ ] Apply in search results
   * [ ] Apply to trends
   * [ ] Apply in settings area (tentative, would be a significant technical change)
 * Federation tab improvements
