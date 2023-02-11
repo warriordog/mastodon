@@ -13,7 +13,7 @@ export DB_POOL=15
 # Compile assets to fix test errors
 # https://stackoverflow.com/questions/52639256/webpackermanifestmissingentryerror
 echo "[run-tests] Precompiling assets..."
-bundle exec rails assets:
+bundle exec rails assets:precompile
 
 echo "[run-tests] Clearing cache..."
 bin/tootctl cache clear
