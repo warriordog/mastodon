@@ -19,7 +19,7 @@ export default class StatusPrepend extends React.PureComponent {
   handleClick = (e) => {
     const { account, parseClick } = this.props;
     parseClick(e, `/@${account.get('acct')}`);
-  }
+  };
 
   Message = () => {
     const { type, account, useLocalLinks } = this.props;
@@ -100,7 +100,7 @@ export default class StatusPrepend extends React.PureComponent {
       );
     }
     return null;
-  }
+  };
 
   render () {
     const { Message } = this;
@@ -128,7 +128,7 @@ export default class StatusPrepend extends React.PureComponent {
     case 'update':
       iconId = 'pencil';
       break;
-    };
+    }
 
     return !type ? null : (
       <aside className={type === 'reblogged_by' || type === 'featured' ? 'status__prepend' : 'notification__message'}>

@@ -36,7 +36,7 @@ export default class StatusList extends ImmutablePureComponent {
 
   getFeaturedStatusCount = () => {
     return this.props.featuredStatusIds ? this.props.featuredStatusIds.size : 0;
-  }
+  };
 
   getCurrentStatusIndex = (id, featured) => {
     if (featured) {
@@ -44,21 +44,21 @@ export default class StatusList extends ImmutablePureComponent {
     } else {
       return this.props.statusIds.indexOf(id) + this.getFeaturedStatusCount();
     }
-  }
+  };
 
   handleMoveUp = (id, featured) => {
     const elementIndex = this.getCurrentStatusIndex(id, featured) - 1;
     this._selectChild(elementIndex, true);
-  }
+  };
 
   handleMoveDown = (id, featured) => {
     const elementIndex = this.getCurrentStatusIndex(id, featured) + 1;
     this._selectChild(elementIndex, false);
-  }
+  };
 
   handleLoadOlder = debounce(() => {
     this.props.onLoadMore(this.props.statusIds.size > 0 ? this.props.statusIds.last() : undefined);
-  }, 300, { leading: true })
+  }, 300, { leading: true });
 
   _selectChild (index, align_top) {
     const container = this.node.node;
@@ -76,7 +76,7 @@ export default class StatusList extends ImmutablePureComponent {
 
   setRef = c => {
     this.node = c;
-  }
+  };
 
   render () {
     const { statusIds, featuredStatusIds, onLoadMore, timelineId, useLocalLinks, ...other }  = this.props;
