@@ -26,6 +26,11 @@ No timeline is offered and plans may be changed or dropped at any time.
 * Non-blocking filters - alternative to "show with warning" and "hide completely"
   * [ ] Highlight word
   * [ ] Flag post
+* Followers / Follows list improvements
+  * [ ] Sort by name
+  * [ ] Sort by date
+  * [ ] Filter by name
+  * [ ] Load All button
 * [ ] Moderation filters - filters applied at the server level to detect and notify moderators upon receipt of flagged messages.
   * [ ] Quick action to create a domain block for the originating instance
   * [ ] Quick action to create a fediblock post for the originating instance
