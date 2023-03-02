@@ -277,20 +277,23 @@ const ignoreSuggestion = (state, position, token, completion, path) => {
 };
 
 const sortHashtagsByUse = (state, tags) => {
-  const personalHistory = state.get('tagHistory');
+  const personalHistory = state.get('tagHistory').map(tag => tag.toLowerCase());
 
-  return tags.sort((a, b) => {
-    const usedA = personalHistory.includes(a.name);
-    const usedB = personalHistory.includes(b.name);
+  const tagsWithLowercase = tags.map(t => ({ ...t, lowerName: t.name.toLowerCase() }));
+  const sorted = tagsWithLowercase.sort((a, b) => {
+    const usedA = personalHistory.includes(a.lowerName);
+    const usedB = personalHistory.includes(b.lowerName);
 
     if (usedA === usedB) {
       return 0;
     } else if (usedA && !usedB) {
-      return 1;
-    } else {
       return -1;
+    } else {
+      return 1;
     }
   });
+  sorted.forEach(tag => delete tag.lowerName);
+  return sorted;
 };
 
 const insertEmoji = (state, position, emojiData) => {
@@ -378,6 +381,14 @@ const updateWithReply = (state, action) => {
     map.set('caretPosition', null);
     map.set('preselectDate', new Date());
     map.set('idempotencyKey', uuid());
+
+    map.update('media_attachments', list => list.filter(media => media.get('unattached')));
+
+    if (action.status.get('language') && !action.status.has('translation')) {
+      map.set('language', action.status.get('language'));
+    } else {
+      map.set('language', state.get('default_language'));
+    }
 
     if (action.status.get('spoiler_text').length > 0) {
       let spoilerText = action.status.get('spoiler_text');

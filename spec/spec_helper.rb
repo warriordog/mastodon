@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 GC.disable
 
 # Based on https://github.com/rspec/rspec-rails/issues/1353#issuecomment-93173691
@@ -31,7 +33,7 @@ end
 gc_counter = -1
 
 RSpec.configure do |config|
-  config.example_status_persistence_file_path = "tmp/rspec/examples.txt"
+  config.example_status_persistence_file_path = 'tmp/rspec/examples.txt'
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
@@ -79,7 +81,7 @@ end
 
 def expect_push_bulk_to_match(klass, matcher)
   expect(Sidekiq::Client).to receive(:push_bulk).with(hash_including({
-    "class" => klass,
-    "args" => matcher
+    'class' => klass,
+    'args' => matcher,
   }))
 end

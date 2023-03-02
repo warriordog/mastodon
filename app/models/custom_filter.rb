@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: custom_filters
@@ -40,11 +41,11 @@ class CustomFilter < ApplicationRecord
   include Expireable
   include Redisable
 
-  enum action: [:warn, :hide], _suffix: :action
+  enum action: { warn: 0, hide: 1 }, _suffix: :action
 
   belongs_to :account
-  has_many :keywords, class_name: 'CustomFilterKeyword', foreign_key: :custom_filter_id, inverse_of: :custom_filter, dependent: :destroy
-  has_many :statuses, class_name: 'CustomFilterStatus', foreign_key: :custom_filter_id, inverse_of: :custom_filter, dependent: :destroy
+  has_many :keywords, class_name: 'CustomFilterKeyword', inverse_of: :custom_filter, dependent: :destroy
+  has_many :statuses, class_name: 'CustomFilterStatus', inverse_of: :custom_filter, dependent: :destroy
   accepts_nested_attributes_for :keywords, reject_if: :all_blank, allow_destroy: true
 
   validates :title, :context, presence: true
@@ -126,6 +127,7 @@ class CustomFilter < ApplicationRecord
       status_matches = [status.id, status.reblog_of_id].compact & rules[:status_ids] if rules[:status_ids].present?
 
       next if keyword_matches.blank? && status_matches.blank?
+
       FilterResultPresenter.new(filter: filter, keyword_matches: keyword_matches, status_matches: status_matches)
     end
   end
@@ -136,6 +138,7 @@ class CustomFilter < ApplicationRecord
 
   def invalidate_cache!
     return unless @should_invalidate_cache
+
     @should_invalidate_cache = false
 
     Rails.cache.delete("filters:v3:#{account_id}")
