@@ -16,6 +16,7 @@ module.exports = {
         cacheDirectory: join(settings.cache_path, 'babel-loader'),
         cacheCompression: env.NODE_ENV === 'production',
         compact: env.NODE_ENV === 'production',
+        plugins: [ '@babel/plugin-proposal-decorators' ],
       },
     },
   ],

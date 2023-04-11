@@ -34,7 +34,7 @@ class QuoteIndicator extends ImmutablePureComponent {
     if (onCancel) {
       onCancel();
     }
-  }
+  };
 
   //  Rendering.
   render () {
@@ -61,7 +61,8 @@ class QuoteIndicator extends ImmutablePureComponent {
           />
           <Icon
             className='quote-indicator__cancel icon-button inverted'
-            id='quote-right' />
+            id='quote-right'
+          />
           {account && (
             <AccountContainer
               id={account}
