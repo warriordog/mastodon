@@ -1,36 +1,28 @@
 import { connect } from 'react-redux';
 import Status from 'flavours/glitch/components/status';
-import { List as ImmutableList } from 'immutable';
-import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
+import { makeGetPictureInPicture, makeGetStatus } from 'flavours/glitch/selectors';
+import { directCompose, mentionCompose, quoteCompose, replyCompose } from 'flavours/glitch/actions/compose';
 import {
-  replyCompose,
-  quoteCompose,
-  mentionCompose,
-  directCompose,
-} from 'flavours/glitch/actions/compose';
-import {
-  reblog,
-  favourite,
   bookmark,
-  unreblog,
-  unfavourite,
-  unbookmark,
+  favourite,
   pin,
+  reblog,
+  unbookmark,
+  unfavourite,
   unpin,
+  unreblog,
 } from 'flavours/glitch/actions/interactions';
 import {
-  muteStatus,
-  unmuteStatus,
   deleteStatus,
-  hideStatus,
-  revealStatus,
   editStatus,
+  hideStatus,
+  muteStatus,
+  revealStatus,
   translateStatus,
   undoStatusTranslation,
+  unmuteStatus,
 } from 'flavours/glitch/actions/statuses';
-import {
-  initAddFilter,
-} from 'flavours/glitch/actions/filters';
+import { initAddFilter } from 'flavours/glitch/actions/filters';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
@@ -38,13 +30,9 @@ import { initBoostModal } from 'flavours/glitch/actions/boosts';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { deployPictureInPicture } from 'flavours/glitch/actions/picture_in_picture';
 import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/initial_state';
-import { filterEditLink } from 'flavours/glitch/utils/backend_links';
+import { defineMessages, injectIntl } from 'react-intl';
+import { boostModal, deleteModal, favouriteModal } from 'flavours/glitch/initial_state';
 import { showAlertForError } from '../actions/alerts';
-import AccountContainer from 'flavours/glitch/containers/account_container';
-import Spoilers from '../components/spoilers';
-import Icon from 'flavours/glitch/components/icon';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -54,7 +42,7 @@ const messages = defineMessages({
   replyConfirm: { id: 'confirmations.reply.confirm', defaultMessage: 'Reply' },
   replyMessage: { id: 'confirmations.reply.message', defaultMessage: 'Replying now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
   quoteConfirm: { id: 'confirmations.quote.confirm', defaultMessage: 'Quote' },
-  quoteMessage: { id: 'confirmations.quote.message', defaultMessage: 'Quoting now will overwrite the message you are currently composing. Are you sure you want to proceed?' },editConfirm: { id: 'confirmations.edit.confirm', defaultMessage: 'Edit' },
+  quoteMessage: { id: 'confirmations.quote.message', defaultMessage: 'Quoting now will overwrite the message you are currently composing. Are you sure you want to proceed?' }, editConfirm: { id: 'confirmations.edit.confirm', defaultMessage: 'Edit' },
   editMessage: { id: 'confirmations.edit.message', defaultMessage: 'Editing now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
   unfilterConfirm: { id: 'confirmations.unfilter.confirm', defaultMessage: 'Show' },
   author: { id: 'confirmations.unfilter.author', defaultMessage: 'Author' },

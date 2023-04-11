@@ -2375,10 +2375,10 @@ a.account__display-name {
   // Grid layout
   display: grid;
   grid-template-areas:
-      "title search"
-      "sidebar publish"
-      "sidebar header"
-      "sidebar body";
+    'title search'
+    'sidebar publish'
+    'sidebar header'
+    'sidebar body';
   grid-template-rows: auto auto auto 1fr;
   grid-template-columns: 20rem 1fr;
 
