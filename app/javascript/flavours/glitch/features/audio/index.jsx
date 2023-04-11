@@ -22,12 +22,12 @@ const messages = defineMessages({
 const TICK_SIZE = 10;
 const PADDING   = 180;
 
-export default @injectIntl
 class Audio extends React.PureComponent {
 
   static propTypes = {
     src: PropTypes.string.isRequired,
     alt: PropTypes.string,
+    lang: PropTypes.string,
     poster: PropTypes.string,
     duration: PropTypes.number,
     width: PropTypes.number,
@@ -464,7 +464,7 @@ class Audio extends React.PureComponent {
   };
 
   render () {
-    const { src, intl, alt, editable, autoPlay, sensitive, blurhash } = this.props;
+    const { src, intl, alt, lang, editable, autoPlay, sensitive, blurhash } = this.props;
     const { paused, muted, volume, currentTime, duration, buffer, dragging, revealed } = this.state;
     const progress = Math.min((currentTime / duration) * 100, 100);
 
@@ -476,7 +476,7 @@ class Audio extends React.PureComponent {
     }
 
     return (
-      <div className={classNames('audio-player', { editable, inactive: !revealed })} ref={this.setPlayerRef} style={{ backgroundColor: this._getBackgroundColor(), color: this._getForegroundColor(), width: '100%', height: this.props.fullscreen ? '100%' : (this.state.height || this.props.height) }} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} tabIndex='0' onKeyDown={this.handleKeyDown}>
+      <div className={classNames('audio-player', { editable, inactive: !revealed })} ref={this.setPlayerRef} style={{ backgroundColor: this._getBackgroundColor(), color: this._getForegroundColor(), width: '100%', height: this.props.fullscreen ? '100%' : (this.state.height || this.props.height) }} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} tabIndex={0} onKeyDown={this.handleKeyDown}>
 
         <Blurhash
           hash={blurhash}
@@ -499,7 +499,7 @@ class Audio extends React.PureComponent {
 
         <canvas
           role='button'
-          tabIndex='0'
+          tabIndex={0}
           className='audio-player__canvas'
           width={this.state.width}
           height={this.state.height}
@@ -509,6 +509,7 @@ class Audio extends React.PureComponent {
           onKeyDown={this.handleAudioKeyDown}
           title={alt}
           aria-label={alt}
+          lang={lang}
         />
 
         <div className={classNames('spoiler-button', { 'spoiler-button--hidden': revealed || editable })}>
@@ -531,7 +532,7 @@ class Audio extends React.PureComponent {
 
           <span
             className={classNames('video-player__seek__handle', { active: dragging })}
-            tabIndex='0'
+            tabIndex={0}
             style={{ left: `${progress}%`, backgroundColor: this._getAccentColor() }}
             onKeyDown={this.handleAudioKeyDown}
           />
@@ -548,7 +549,7 @@ class Audio extends React.PureComponent {
 
                 <span
                   className='video-player__volume__handle'
-                  tabIndex='0'
+                  tabIndex={0}
                   style={{ left: `${volume * 100}%`, backgroundColor: this._getAccentColor() }}
                 />
               </div>
@@ -573,3 +574,5 @@ class Audio extends React.PureComponent {
   }
 
 }
+
+export default injectIntl(Audio);

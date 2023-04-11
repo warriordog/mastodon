@@ -21,7 +21,6 @@ import AnimatedNumber from 'flavours/glitch/components/animated_number';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
 import EditedTimestamp from 'flavours/glitch/components/edited_timestamp';
 
-export default @injectIntl
 class DetailedStatus extends ImmutablePureComponent {
 
   static contextTypes = {
@@ -170,6 +169,7 @@ class DetailedStatus extends ImmutablePureComponent {
           <Audio
             src={attachment.get('url')}
             alt={attachment.get('description')}
+            lang={status.get('language')}
             duration={attachment.getIn(['meta', 'original', 'duration'], 0)}
             poster={attachment.get('preview_url') || status.getIn(['account', 'avatar_static'])}
             backgroundColor={attachment.getIn(['meta', 'colors', 'background'])}
@@ -192,6 +192,7 @@ class DetailedStatus extends ImmutablePureComponent {
             blurhash={attachment.get('blurhash')}
             src={attachment.get('url')}
             alt={attachment.get('description')}
+            lang={status.get('language')}
             inline
             sensitive={status.get('sensitive')}
             letterbox={settings.getIn(['media', 'letterbox'])}
@@ -210,6 +211,7 @@ class DetailedStatus extends ImmutablePureComponent {
             standalone
             sensitive={status.get('sensitive')}
             media={status.get('media_attachments')}
+            lang={status.get('language')}
             letterbox={settings.getIn(['media', 'letterbox'])}
             fullwidth={settings.getIn(['media', 'fullwidth'])}
             hidden={!expanded}
@@ -226,7 +228,7 @@ class DetailedStatus extends ImmutablePureComponent {
     }
 
     if (status.get('poll')) {
-      contentMedia.push(<PollContainer pollId={status.get('poll')} />);
+      contentMedia.push(<PollContainer pollId={status.get('poll')} lang={status.get('language')} />);
       contentMediaIcons.push('tasks');
     }
 
@@ -338,3 +340,5 @@ class DetailedStatus extends ImmutablePureComponent {
   }
 
 }
+
+export default injectIntl(DetailedStatus);

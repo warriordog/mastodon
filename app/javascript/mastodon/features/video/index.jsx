@@ -94,7 +94,6 @@ export const fileNameFromURL = str => {
   return pathname.slice(index + 1);
 };
 
-export default @injectIntl
 class Video extends React.PureComponent {
 
   static propTypes = {
@@ -102,6 +101,7 @@ class Video extends React.PureComponent {
     frameRate: PropTypes.string,
     src: PropTypes.string.isRequired,
     alt: PropTypes.string,
+    lang: PropTypes.string,
     width: PropTypes.number,
     height: PropTypes.number,
     sensitive: PropTypes.bool,
@@ -524,7 +524,7 @@ class Video extends React.PureComponent {
   }
 
   render () {
-    const { preview, src, inline, onOpenVideo, onCloseVideo, intl, alt, detailed, sensitive, editable, blurhash, autoFocus } = this.props;
+    const { preview, src, inline, onOpenVideo, onCloseVideo, intl, alt, lang, detailed, sensitive, editable, blurhash, autoFocus } = this.props;
     const { containerWidth, currentTime, duration, volume, buffer, dragging, paused, fullscreen, hovered, muted, revealed } = this.state;
     const progress = Math.min((currentTime / duration) * 100, 100);
     const playerStyle = {};
@@ -582,9 +582,10 @@ class Video extends React.PureComponent {
           poster={preview}
           preload={preload}
           role='button'
-          tabIndex='0'
+          tabIndex={0}
           aria-label={alt}
           title={alt}
+          lang={lang}
           width={width}
           height={height}
           volume={volume}
@@ -610,7 +611,7 @@ class Video extends React.PureComponent {
 
             <span
               className={classNames('video-player__seek__handle', { active: dragging })}
-              tabIndex='0'
+              tabIndex={0}
               style={{ left: `${progress}%` }}
               onKeyDown={this.handleVideoKeyDown}
             />
@@ -626,7 +627,7 @@ class Video extends React.PureComponent {
 
                 <span
                   className={classNames('video-player__volume__handle')}
-                  tabIndex='0'
+                  tabIndex={0}
                   style={{ left: `${volume * 100}%` }}
                 />
               </div>
@@ -653,3 +654,5 @@ class Video extends React.PureComponent {
   }
 
 }
+
+export default injectIntl(Video);

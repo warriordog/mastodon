@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_24_220348) do
+ActiveRecord::Schema.define(version: 2023_02_15_074424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -879,11 +879,11 @@ ActiveRecord::Schema.define(version: 2022_12_24_220348) do
     t.text "spoiler_text", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "content_type"
     t.bigint "ordered_media_attachment_ids", array: true
     t.text "media_descriptions", array: true
     t.string "poll_options", array: true
     t.boolean "sensitive"
-    t.string "content_type"
     t.index ["account_id"], name: "index_status_edits_on_account_id"
     t.index ["status_id"], name: "index_status_edits_on_status_id"
   end
@@ -941,8 +941,6 @@ ActiveRecord::Schema.define(version: 2022_12_24_220348) do
     t.datetime "edited_at"
     t.boolean "trendable"
     t.bigint "ordered_media_attachment_ids", array: true
-    t.boolean "local_only"
-    t.string "content_type"
     t.bigint "quote_id"
     t.index ["account_id", "id", "visibility", "updated_at"], name: "index_statuses_20190820", order: { id: :desc }, where: "(deleted_at IS NULL)"
     t.index ["account_id"], name: "index_statuses_on_account_id"
@@ -1065,6 +1063,7 @@ ActiveRecord::Schema.define(version: 2022_12_24_220348) do
     t.inet "sign_up_ip"
     t.boolean "skip_sign_in_token"
     t.bigint "role_id"
+    t.text "settings"
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_by_application_id"], name: "index_users_on_created_by_application_id", where: "(created_by_application_id IS NOT NULL)"

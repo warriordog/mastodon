@@ -56,7 +56,6 @@ export const defaultMediaVisibility = (status, settings) => {
   return (displayMedia !== 'hide_all' && !status.get('sensitive') || displayMedia === 'show_all');
 };
 
-export default @injectIntl
 class Status extends ImmutablePureComponent {
 
   static contextTypes = {
@@ -569,7 +568,7 @@ class Status extends ImmutablePureComponent {
     if (hidden) {
       return (
         <HotKeys handlers={handlers}>
-          <div ref={this.handleRef} className='status focusable' tabIndex='0'>
+          <div ref={this.handleRef} className='status focusable' tabIndex={0}>
             <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
             <span>{status.get('content')}</span>
           </div>
@@ -586,7 +585,7 @@ class Status extends ImmutablePureComponent {
 
       return (
         <HotKeys handlers={minHandlers}>
-          <div className='status__wrapper status__wrapper--filtered focusable' tabIndex='0' ref={this.handleRef}>
+          <div className='status__wrapper status__wrapper--filtered focusable' tabIndex={0} ref={this.handleRef}>
             <FormattedMessage id='status.filtered' defaultMessage='Filtered' />: {matchedFilters.join(', ')}.
             {' '}
             <button className='status__wrapper--filtered__button' onClick={this.handleUnfilterClick}>
@@ -634,6 +633,7 @@ class Status extends ImmutablePureComponent {
               <Component
                 src={attachment.get('url')}
                 alt={attachment.get('description')}
+                lang={status.get('language')}
                 poster={attachment.get('preview_url') || status.getIn(['account', 'avatar_static'])}
                 backgroundColor={attachment.getIn(['meta', 'colors', 'background'])}
                 foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
@@ -663,6 +663,7 @@ class Status extends ImmutablePureComponent {
               blurhash={attachment.get('blurhash')}
               src={attachment.get('url')}
               alt={attachment.get('description')}
+              lang={status.get('language')}
               inline
               sensitive={status.get('sensitive')}
               letterbox={settings.getIn(['media', 'letterbox'])}
@@ -684,6 +685,7 @@ class Status extends ImmutablePureComponent {
             {Component => (
               <Component
                 media={attachments}
+                lang={status.get('language')}
                 sensitive={status.get('sensitive')}
                 letterbox={settings.getIn(['media', 'letterbox'])}
                 fullwidth={settings.getIn(['media', 'fullwidth'])}
@@ -718,7 +720,7 @@ class Status extends ImmutablePureComponent {
     }
 
     if (status.get('poll')) {
-      contentMedia.push(<PollContainer pollId={status.get('poll')} />);
+      contentMedia.push(<PollContainer pollId={status.get('poll')} lang={status.get('language')} />);
       contentMediaIcons.push('tasks');
     }
 
@@ -772,7 +774,7 @@ class Status extends ImmutablePureComponent {
           style={isCollapsed && background ? { backgroundImage: `url(${background})` } : null}
           {...selectorAttribs}
           ref={handleRef}
-          tabIndex='0'
+          tabIndex={0}
           data-featured={featured ? 'true' : null}
           aria-label={textForScreenReader(intl, status, rebloggedByText, !status.get('hidden'))}
         >
@@ -835,3 +837,5 @@ class Status extends ImmutablePureComponent {
   }
 
 }
+
+export default injectIntl(Status);
