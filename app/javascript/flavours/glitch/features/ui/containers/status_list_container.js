@@ -1,9 +1,11 @@
+import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
 import { connect } from 'react-redux';
-import StatusList from 'flavours/glitch/components/status_list';
-import { loadPending, scrollTopTimeline } from 'flavours/glitch/actions/timelines';
-import { List as ImmutableList, Map as ImmutableMap } from 'immutable';
 import { createSelector } from 'reselect';
+
 import { debounce } from 'lodash';
+
+import { scrollTopTimeline, loadPending } from 'flavours/glitch/actions/timelines';
+import StatusList from 'flavours/glitch/components/status_list';
 import { me } from 'flavours/glitch/initial_state';
 
 const getRegex = createSelector([
@@ -58,17 +60,17 @@ const makeMapStateToProps = () => {
   const getStatusIds = makeGetStatusIds();
   const getPendingStatusIds = makeGetStatusIds(true);
 
-  const mapStateToProps = (state, props) => {
+  const mapStateToProps = (state, { timelineId, regex, useLocalLinks }) => {
     const settings = state.get('local_settings');
-    const useLocalLinks = props.useLocalLinks || settings.get('use_local_links');
 
     return ({
-      statusIds: getStatusIds(state, { type: props.timelineId, regex: props.regex }),
-      isLoading: state.getIn(['timelines', props.timelineId, 'isLoading'], true),
-      isPartial: state.getIn(['timelines', props.timelineId, 'isPartial'], false),
-      hasMore: state.getIn(['timelines', props.timelineId, 'hasMore']),
-      numPending: getPendingStatusIds(state, { type: props.timelineId }).size,
-      useLocalLinks: props.useLocalLinks || useLocalLinks,
+      statusIds: getStatusIds(state, { type: timelineId, regex }),
+      lastId:    state.getIn(['timelines', timelineId, 'items'])?.last(),
+      isLoading: state.getIn(['timelines', timelineId, 'isLoading'], true),
+      isPartial: state.getIn(['timelines', timelineId, 'isPartial'], false),
+      hasMore:   state.getIn(['timelines', timelineId, 'hasMore']),
+      numPending: getPendingStatusIds(state, { type: timelineId }).size,
+      useLocalLinks: useLocalLinks || settings.get('use_local_links'),
     });
   };
 

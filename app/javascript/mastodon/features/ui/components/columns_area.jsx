@@ -1,28 +1,32 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import { Children, cloneElement } from 'react';
+
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
+
+import { supportsPassiveEvents } from 'detect-passive-events';
+
+import { scrollRight } from '../../../scroll';
 import BundleContainer from '../containers/bundle_container';
-import ColumnLoading from './column_loading';
-import DrawerLoading from './drawer_loading';
-import BundleColumnError from './bundle_column_error';
 import {
-  BookmarkedStatuses,
-  CommunityTimeline,
   Compose,
-  Directory,
+  Notifications,
+  HomeTimeline,
+  CommunityTimeline,
+  PublicTimeline,
+  HashtagTimeline,
   DirectTimeline,
   FavouritedStatuses,
-  HashtagTimeline,
-  HomeTimeline,
+  BookmarkedStatuses,
   ListTimeline,
-  Notifications,
-  PublicTimeline,
-} from '../../ui/util/async-components';
+  Directory,
+} from '../util/async-components';
+
+import BundleColumnError from './bundle_column_error';
+import ColumnLoading from './column_loading';
 import ComposePanel from './compose_panel';
+import DrawerLoading from './drawer_loading';
 import NavigationPanel from './navigation_panel';
-import { supportsPassiveEvents } from 'detect-passive-events';
-import { scrollRight } from '../../../scroll';
 
 const componentMap = {
   'COMPOSE': Compose,
@@ -76,7 +80,7 @@ export default class ColumnsArea extends ImmutablePureComponent {
     this.isRtlLayout = document.getElementsByTagName('body')[0].classList.contains('rtl');
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (this.props.singleColumn !== nextProps.singleColumn && nextProps.singleColumn) {
       this.node.removeEventListener('wheel', this.handleWheel);
     }
@@ -173,7 +177,7 @@ export default class ColumnsArea extends ImmutablePureComponent {
           );
         })}
 
-        {React.Children.map(children, child => React.cloneElement(child, { multiColumn: true }))}
+        {Children.map(children, child => cloneElement(child, { multiColumn: true }))}
       </div>
     );
   }

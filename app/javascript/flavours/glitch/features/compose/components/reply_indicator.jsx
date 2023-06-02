@@ -1,16 +1,16 @@
 //  Package imports.
 import PropTypes from 'prop-types';
-import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
+
 import { defineMessages, injectIntl } from 'react-intl';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 //  Components.
-import AccountContainer from 'flavours/glitch/containers/account_container';
-import Icon from 'flavours/glitch/components/icon';
-import IconButton from 'flavours/glitch/components/icon_button';
 import AttachmentList from 'flavours/glitch/components/attachment_list';
-
+import { Icon } from 'flavours/glitch/components/icon';
+import { IconButton } from 'flavours/glitch/components/icon_button';
+import AccountContainer from 'flavours/glitch/containers/account_container';
 //  Messages.
 const messages = defineMessages({
   cancel: {

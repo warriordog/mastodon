@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V2::FiltersController, type: :controller do
+RSpec.describe Api::V2::FiltersController do
   render_views
 
   let(:user)  { Fabricate(:user) }
@@ -86,7 +86,7 @@ RSpec.describe Api::V2::FiltersController, type: :controller do
     let!(:keyword) { Fabricate(:custom_filter_keyword, custom_filter: filter) }
     let(:contexts) { %w(home_feed lists public) }
 
-    context 'updating filter parameters' do
+    context 'when updating filter parameters' do
       before do
         put :update, params: { id: filter.id, title: 'updated', context: contexts }
       end
@@ -104,7 +104,7 @@ RSpec.describe Api::V2::FiltersController, type: :controller do
       end
     end
 
-    context 'updating keywords in bulk' do
+    context 'when updating keywords in bulk' do
       before do
         allow(redis).to receive_messages(publish: nil)
         put :update, params: { id: filter.id, keywords_attributes: [{ id: keyword.id, keyword: 'updated' }] }

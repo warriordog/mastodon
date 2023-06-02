@@ -3,12 +3,16 @@ module.exports = (api) => {
 
   const reactOptions = {
     development: false,
+    runtime: 'automatic',
   };
 
   const envOptions = {
     loose: true,
     modules: false,
     debug: false,
+    include: [
+      'proposal-numeric-separator',
+    ],
   };
 
   const config = {
@@ -20,6 +24,7 @@ module.exports = (api) => {
     plugins: [
       ['react-intl', { messagesDir: './build/messages' }],
       'preval',
+      '@babel/plugin-proposal-optional-chaining',
       '@babel/plugin-proposal-nullish-coalescing-operator',
     ],
     overrides: [

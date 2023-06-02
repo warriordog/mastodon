@@ -1,21 +1,23 @@
 //  Package imports.
-import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { defineMessages, FormattedMessage } from 'react-intl';
-import ImmutablePureComponent from 'react-immutable-pure-component';
-import { HotKeys } from 'react-hotkeys';
+
+import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
 
-// Our imports.
-import Permalink from 'flavours/glitch/components/permalink';
-import NotificationOverlayContainer from '../containers/overlay_container';
-import Icon from 'flavours/glitch/components/icon';
-import Report from './report';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePureComponent from 'react-immutable-pure-component';
 
-const messages = defineMessages({
-  adminReport: { id: 'notification.admin.report', defaultMessage: '{name} reported {target}' },
-});
+import { HotKeys } from 'react-hotkeys';
+
+
+// Our imports.
+import { Icon } from 'flavours/glitch/components/icon';
+import Permalink from 'flavours/glitch/components/permalink';
+
+import NotificationOverlayContainer from '../containers/overlay_container';
+
+import Report from './report';
 
 export default class AdminReport extends ImmutablePureComponent {
 
@@ -67,7 +69,7 @@ export default class AdminReport extends ImmutablePureComponent {
   }
 
   render () {
-    const { intl, account, notification, unread, report, useLocalLinks } = this.props;
+    const { account, notification, unread, report, useLocalLinks } = this.props;
 
     if (!report) {
       return null;
