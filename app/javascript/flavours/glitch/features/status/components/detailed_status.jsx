@@ -305,7 +305,7 @@ class DetailedStatus extends ImmutablePureComponent {
     }
 
     const accountUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}` : status.getIn(['account', 'url']);
-    const statusUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}\/${status.get('id')}` : status.get('url');
+    const statusUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}/${status.get('id')}` : status.get('url');
 
     return (
       <div style={outerStyle}>

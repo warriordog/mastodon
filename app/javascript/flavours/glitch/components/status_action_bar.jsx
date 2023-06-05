@@ -316,7 +316,7 @@ class StatusActionBar extends ImmutablePureComponent {
       <IconButton className='status__action-bar-button' title={intl.formatMessage(messages.hide)} icon='eye' onClick={this.handleHideClick} />
     );
 
-    const statusUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}\/${status.get('id')}` : status.get('url');
+    const statusUrl = useLocalLinks ? `/@${status.getIn(['account', 'acct'])}/${status.get('id')}` : status.get('url');
 
     return (
       <div className='status__action-bar'>

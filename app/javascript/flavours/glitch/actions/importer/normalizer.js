@@ -106,7 +106,7 @@ export function normalizeStatus(status, normalOldStatus, settings) {
         }
       });
       let _contentHtml = docElem.textContent;
-      normalStatus.quote.contentHtml  = '<p>'+emojify(_contentHtml.substr(0, 150), quote_emojiMap) + (_contentHtml.substr(150) ? '...' : '')+'</p>';
+      normalStatus.quote.contentHtml  = '<p>'+emojify(_contentHtml.slice(0, 150), quote_emojiMap) + (_contentHtml.slice(150) ? '...' : '')+'</p>';
       normalStatus.quote.spoilerHtml  = emojify(escapeTextContentForBrowser(quote_spoilerText), quote_emojiMap);
       normalStatus.quote_hidden       = (quote_spoilerText.length > 0 || normalStatus.quote.sensitive) && autoHideCW(settings, quote_spoilerText);
 
