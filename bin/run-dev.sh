@@ -5,8 +5,7 @@ export RAILS_ENV=development
 export NODE_ENV=development
 
 # Optimize concurrency for development mode
-export STREAMING_CLUSTER_NUM=1
-export WEB_CONCURRENCY=1
+export WEB_CONCURRENCY=1  # Don't set to zero - Mastodon requires cluster mode
 export MAX_THREADS=1
 export SIDEKIQ_CONCURRENCY=1
 export DB_POOL=10

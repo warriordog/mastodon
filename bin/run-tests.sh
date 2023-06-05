@@ -5,11 +5,10 @@ export RAILS_ENV=test
 export NODE_ENV=test
 
 # Optimize concurrency for testing mode
-export STREAMING_CLUSTER_NUM=1
-export WEB_CONCURRENCY=1
+export WEB_CONCURRENCY=1  # Don't set to zero - Mastodon requires cluster mode
 export MAX_THREADS=2
 export SIDEKIQ_CONCURRENCY=2
-export DB_POOL=15
+export DB_POOL=20
 
 # Start services in case system has rebooted.
 # WSL does not always include an init system.
