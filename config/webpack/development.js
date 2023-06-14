@@ -48,7 +48,7 @@ module.exports = merge(sharedConfig, {
     overlay: settings.dev_server.overlay,
     stats: {
       entrypoints: false,
-      errorDetails: false,
+      errorDetails: true,
       modules: false,
       moduleTrace: false,
     },
